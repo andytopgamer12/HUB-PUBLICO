@@ -355,27 +355,22 @@
             box.id = 'mr_andy_box';
 
             // Aplica estilos CSS à caixa principal para o visual de "hacker"
-            // *** ESTILOS MAIS COMPATÍVEIS PARA FORÇAR VISIBILIDADE ***
-            box.style.cssText = `
-                position: fixed !important; /* Mantém position: fixed com alta prioridade */
-                width: ${COLLAPSED_WIDTH};
-                height: ${COLLAPSED_HEIGHT};
-                background: rgb(0,0,0);
-                border-radius: 15px;
-                border: 2px solid #00FF00;
-                box-shadow: 0 0 20px rgba(0,255,0,0.6);
-                z-index: 99999999 !important; /* Z-index EXTREMAMENTE alto ainda é crucial */
-                cursor: move;
-                overflow: hidden;
-                display: flex !important; /* Mantém display:flex com alta prioridade para garantir que apareça */
-                flex-direction: column;
-                align-items: center;
-                top: 20px !important; /* Posição inicial no canto superior com alta prioridade */
-                right: 20px !important; /* Posição inicial no canto superior direito com alta prioridade */
-                left: auto; /* Garante que 'left' não interfira, sem !important */
-                margin: 0;
-                padding: 0;
-            `;
+            box.style.position = 'fixed';
+            box.style.width = COLLAPSED_WIDTH;
+            box.style.height = COLLAPSED_HEIGHT;
+            box.style.background = 'rgb(0,0,0)'; // Fundo preto sólido para o box principal
+            box.style.borderRadius = '15px';
+            box.style.border = '2px solid #00FF00';
+            box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
+            box.style.zIndex = 99999; /* Z-index MUITO alto para garantir que ele fique na frente */
+            box.style.cursor = 'move'; /* Cursor padrão para arrastar, sempre */
+            box.style.overflow = 'hidden'; /* Mantém oculto para contentes que vazarem da caixa principal */
+            box.style.display = 'flex'; // Garante que o box inicial esteja visível
+            box.style.flexDirection = 'column';
+            box.style.alignItems = 'center';
+            box.style.transition = 'height 0.3s ease-in-out, width 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-radius 0.3s ease-in-out';
+            box.style.right = '20px'; /* Posição inicial na direita */
+            box.style.top = '20px'; /* Posição inicial no topo */
 
 
             var titleBar = document.createElement('div');
@@ -401,8 +396,8 @@
             iconImage.style.borderRadius = '15px';
             iconImage.style.border = 'none';
             iconImage.style.boxShadow = 'none';
-            iconImage.style.opacity = '1 !important'; // Garante que a imagem tenha opacidade 1
-            iconImage.style.display = 'block !important'; // Garante que a imagem esteja visível
+            iconImage.style.opacity = '1'; // Garante que a imagem tenha opacidade 1
+            iconImage.style.display = 'block';
 
             // O handler de erro para um placeholder genérico caso a imagem fornecida falhe.
             iconImage.onerror = function() {
@@ -731,15 +726,15 @@
                 if (isExpanded) {
                     box.style.height = COLLAPSED_HEIGHT;
                     box.style.width = COLLAPSED_WIDTH;
-                    box.style.background = 'rgb(0,0,0) !important'; // Fundo preto sólido quando minimizado
-                    box.style.borderRadius = '15px !important';
-                    box.style.border = '2px solid #00FF00 !important';
-                    box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6) !important';
-                    box.style.zIndex = '99999999 !important';
-                    box.style.overflow = 'hidden !important';
-                    box.style.display = 'flex !important';
-                    box.style.flexDirection = 'column !important';
-                    box.style.alignItems = 'center !important';
+                    box.style.background = 'rgb(0,0,0)'; // Fundo preto sólido quando minimizado
+                    box.style.borderRadius = '15px';
+                    box.style.border = '2px solid #00FF00';
+                    box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
+                    box.style.zIndex = 99999; /* Z-index MUITO alto */
+                    box.style.overflow = 'hidden';
+                    box.style.display = 'flex';
+                    box.style.flexDirection = 'column';
+                    box.style.alignItems = 'center';
                     box.style.transition = 'height 0.3s ease-in-out, width 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-radius 0.3s ease-in-out';
 
                     iconImage.style.setProperty('display', 'block', 'important');
@@ -756,11 +751,11 @@
                 } else {
                     box.style.height = EXPANDED_HEIGHT;
                     box.style.width = EXPANDED_WIDTH;
-                    box.style.background = 'rgb(0,0,0) !important'; // AGORA PRETO SÓLIDO AO EXPANDIR!
-                    box.style.borderRadius = '15px !important';
-                    box.style.border = '2px solid #00FF00 !important';
-                    box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6) !important';
-                    box.style.overflow = 'hidden !important';
+                    box.style.background = 'rgb(0,0,0)'; // AGORA PRETO SÓLIDO AO EXPANDIR!
+                    box.style.borderRadius = '15px';
+                    box.style.border = '2px solid #00FF00';
+                    box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
+                    box.style.overflow = 'hidden';
                     // Cursor de 'move' já está definido globalmente no 'box.style'
 
                     titleBar.style.background = 'rgba(0,255,0,0.2)';
@@ -1042,6 +1037,12 @@
                 playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/gcelzszy.wav');
                 await delay(500);
                 sendToast(`⭐ Bem vindo(a) de volta: ${user.nickname || "Usuário"}`);
+                console.clear();
+
+                // Se a auto-resposta já estiver marcada como ativa ao carregar, inicie-a
+                if (window.features.autoAnswer && window.autoAnswerModule) {
+                    window.autoAnswerModule.toggle(true);
+                }
             })();
 
         }; // Fim do window.onload
