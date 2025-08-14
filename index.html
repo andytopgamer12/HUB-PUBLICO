@@ -385,8 +385,8 @@
             var iconImage = document.createElement('img');
             // ATENÇÃO: Use o URL RAW público da sua imagem no GitHub aqui!
             // Exemplo: 'https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/ICONE.jpg'
-            // CORRIGIDO: URL da imagem
-            iconImage.src = 'https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICO/main/ICONE.jpg';
+            // CORRIGIDO: URL da imagem usando corsproxy para tentar resolver problemas de carregamento
+            iconImage.src = 'https://corsproxy.io/?url=https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICO/main/ICONE.jpg';
             iconImage.alt = 'Hub Icon';
             iconImage.style.width = '60px';
             iconImage.style.height = '60px';
@@ -880,22 +880,7 @@
                         return; // Para se a funcionalidade estiver desativada
                     }
 
-                    const clickedAButton = checkAndClickProgressButton();
-
-                    // Sempre aguarda o atraso configurado APÓS a tentativa de clique (seja bem-sucedida ou não)
-                    // Isso cria o "tempo entre elas" para anti-detecção.
-                    await delay(delaySeconds * 1000);
-
-                    // Em seguida, agenda a próxima verificação
-                    scheduleNextCheck();
-                }
-
-                /**
-                 * Verifica e clica nos botões de progresso ou opções de resposta.
-                 * @returns {boolean} True se um botão foi clicado, false caso contrário.
-                 */
-                function checkAndClickProgressButton() {
-                    debug("autoAnswer: Tentando selecionar opção de rádio correta...");
+                    // Tenta selecionar a opção correta primeiro
                     const radioInputs = document.querySelectorAll('input[type="radio"]');
                     let foundAndClickedRadio = false;
 
@@ -918,6 +903,8 @@
                         debug("autoAnswer: Nenhuma opção de rádio correta (para spoof) encontrada ou já selecionada.");
                     }
 
+                    // Agora tenta clicar nos botões de progresso
+                    let clickedAButton = false;
                     // Definir botões na ordem de preferência para clique: Verificar, Próxima Questão, Continuar
                     const buttonsToTry = [
                         { selector: 'button[data-test-id="challenge-check-answer-button"]', text: 'Verificar', isTextMatch: false },
@@ -946,13 +933,26 @@
                                 element.click();
                                 sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
                                 debug(`autoAnswer: Clicou em '${element.textContent.trim()}'.`);
-                                return true; // Indica que um botão foi clicado com sucesso
+                                clickedAButton = true;
+                                // Se um botão foi clicado, aguarda o atraso ANTES de tentar o próximo ciclo.
+                                await delay(delaySeconds * 1000);
+                                break; // Sai do loop de botões após clicar em um
                             } else if (match) {
                                 debug(`autoAnswer: Botão '${element.textContent.trim()}' encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
                             }
                         }
+                        if (clickedAButton) break; // Sai do loop externo se um botão já foi clicado
                     }
-                    return false; // Nenhum botão foi clicado
+
+                    // Se nada foi clicado, ainda aguarda o atraso antes da próxima verificação
+                    if (!clickedAButton) {
+                        debug("autoAnswer: Nenhum botão de progresso clicável encontrado neste ciclo. Aguardando próximo ciclo.");
+                        await delay(delaySeconds * 1000); // Aguarda antes de tentar novamente
+                    }
+
+
+                    // Em seguida, agenda a próxima verificação
+                    scheduleNextCheck();
                 }
 
                 return {
@@ -1050,4 +1050,3 @@
     </script>
 </body>
 </html>
-s
