@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prévia do Hub Khanware</title>
+    <!-- Favicon - Este favicon só aparecerá se você abrir este HTML diretamente,
+         não quando injetado em outro site. -->
+    <link rel="icon" href="https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/ukh0rq22.png">
+
+    <!-- Estilos CSS Injetados (AJUSTADOS para injeção sem conflitos globais) -->
+    <style>
+        @font-face {
+            font-family: 'MuseoSans';
+            src: url('https://corsproxy.io/?url=https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/ynddewua.ttf') format('truetype');
+        }
+        body {
+            /* ESTILOS DE BODY CRÍTICOS REMOVIDOS OU AJUSTADOS PARA NÃO AFETAR O SITE HOSPEDEIRO */
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            /* As propriedades abaixo causavam os bugs visuais (bordas, centralização) quando injetadas
+               porque tentavam sobrescrever o layout do site inteiro.
+               Foram removidas ou comentadas. */
+            /* background-color: #222; */
+            /* display: flex; */
+            /* justify-content: center; */
+            /* align-items: center; */
+            /* min-height: 100vh; */
+            /* overflow: hidden; */
+        }
+
+        /* Estilos personalizados para a barra de rolagem (Webkit browsers como Chrome/Safari) */
+        #mr_andy_box *::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #mr_andy_box *::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        #mr_andy_box *::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        #mr_andy_box *::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 1);
+        }
+
+        /* Estilos para botões dentro do hub */
+        .hub-button {
+            width: 100%;
+            padding: 10px 5px;
+            background: #00CC00 !important;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0,255,0,0.4) !important;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+            text-align: center;
+            box-sizing: border-box; /* Corrigido: sintaxe de box-sizing */
+        }
+        .hub-button:hover {
+            background: #00FF00 !important;
+            box-shadow: 0 0 15px rgba(0,255,0,0.8) !important;
+        }
+
+        /* Estilo para botões de alerta/recarregar (vermelho) */
+        .action-button {
+            background: #dc3545 !important;
+            box-shadow: 0 0 8px rgba(220,53,69,0.4) !important;
+        }
+        .action-button:hover {
+            background: #bd2130 !important;
+            box-shadow: 0 0 15px rgba(220,53,69,0.8) !important;
+        }
+
+        /* Estilos para o toggle switch (da auto-answer-option) */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 25px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+            /* NOVO: Usando flexbox para centralizar o thumb (círculo) */
+            display: flex;
+            align-items: center; /* Centraliza verticalmente */
+            padding: 3px; /* Espaçamento interno para o thumb */
+            box-sizing: border-box; /* Inclui o padding no tamanho total */
+        }
+        .slider:before {
+            content: "";
+            height: 19px;
+            width: 19px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            /* Removidas propriedades de posicionamento absoluto, pois o flexbox irá centralizar */
+        }
+        input:checked + .slider {
+            background-color: #00FF00; /* Verde neon do hub */
+            box-shadow: 0 0 5px #00FF00;
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #00FF00;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px); /* O valor de translação permanece o mesmo */
+        }
+
+        /* Estilos para o controle deslizante de atraso */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #1a1a1a;
+            outline: none;
+            border-radius: 5px;
+            transition: opacity .2s;
+            margin-top: 5px;
+            box-shadow: inset 0 0 5px rgba(0,255,0,0.4);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #00FF00;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,255,0,0.8);
+            border: 2px solid #00FF00;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #00FF00;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0,255,0,0.8);
+            border: 2px solid #00FF00;
+        }
+    </style>
+
+    <!-- Carrega bibliotecas externas para a prévia (Toastify-js e DarkReader) -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/darkreader@4.9.92/darkreader.min.js"></script>
+</head>
+<body>
+    <!-- O script do Hub Khanware será injetado aqui -->
+    <script>
+        // Use uma função auto-executável para encapsular o código e evitar poluir o escopo global.
+        // O código principal só será executado quando a DOM estiver pronta e a janela carregada.
+        window.onload = function() {
+            // Verifica se a caixa 'mr_andy_box' já existe para evitar duplicatas.
+            if (document.getElementById('mr_andy_box')) {
+                return;
+            }
+
+            // --- Configurações e Variáveis Globais do Khanware ---
+            const ver = "0.0 BETA";
+            let isDev = false;
+
+            const repoPath = `https://raw.githubusercontent.com/Niximkk/Khanware/refs/heads/${isDev ? "dev/" : "main/"}/`;
+
+            /* Dados do Usuário (Preenchidos externamente, aqui como placeholders) */
+            let user = {
+                username: "Username",
+                nickname: "Nickname",
+                UID: 0
+            };
+
+            /* Estados das Funcionalidades e Configurações (globais) */
+            // Garante que 'window.features' e 'window.featureConfigs' existem
+            window.features = window.features || {};
+            window.featureConfigs = window.featureConfigs || {};
+
+            // Inicializa as features, incluindo autoAnswer
+            window.features = {
+                questionSpoof: false,
+                autoAnswer: false,    // Define se a auto-resposta está ativa (false por padrão)
+                darkMode: false,      // Adicionado: Controla o estado do modo escuro
+                videoSpoof: true,
+                showAnswers: false,
+                customBanner: false,
+                nextRecomendation: false,
+                repeatQuestion: false,
+                minuteFarmer: false,
+                rgbLogo: false
+            };
+            window.featureConfigs = {
+                autoAnswerDelay: 5.0, // O atraso inicial em segundos para a auto-resposta (começa no mais lento)
+                customUsername: "",
+                customPfp: ""
+            };
+
+            // --- Emissor de Eventos (EventEmitter) ---
+            class EventEmitter {
+                constructor() { this.events = {}; }
+                on(t, e) { if (typeof t === "string") t = [t]; t.forEach(t => { if (!this.events[t]) this.events[t] = []; this.events[t].push(e); }); }
+                off(t, e) { if (typeof t === "string") t = [t]; t.forEach(t => { if (this.events[t]) { this.events[t] = this.events[t].filter(t => t !== e); } }); }
+                emit(t, ...e) { if (this.events[t]) { this.events[t].forEach(t => { t(...e); }); } }
+                once(t, e) { if (typeof t === "string") t = [t]; let s = (...i) => { e(...i), this.off(t, s); }; this.on(t, s); }
+            }
+            const plppdo = new EventEmitter();
+
+            // --- Funções Utilitárias ---
+
+            /**
+             * Função de depuração (debug).
+             * @param {string} text - A mensagem de depuração.
+             */
+            window.debug = function(text) {
+                console.log(`[DEBUG] ${text}`);
+            };
+
+            /**
+             * Cria um atraso assíncrono.
+             * @param {number} ms - O número de milissegundos para atrasar.
+             * @returns {Promise<void>} Uma Promise que resolve após o atraso.
+             */
+            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+            /**
+             * Toca um arquivo de áudio a partir de uma URL.
+             * @param {string} url - A URL do arquivo de áudio.
+             */
+            const playAudio = url => {
+                const audio = new Audio(url);
+                audio.play();
+                debug(`🔊 Reproduzindo áudio de ${url}`);
+            };
+
+            /**
+             * Encontra um elemento pelo seletor CSS e o clica.
+             * Exibe uma notificação 'toast' se o elemento for encontrado e clicado.
+             * @param {string} selector - O seletor CSS do elemento a ser clicado.
+             */
+            const findAndClickBySelector = selector => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.click();
+                    sendToast(`⭕ Pressionando ${selector}...`, 1000);
+                } else {
+                    debug(`Elemento não encontrado para o seletor: ${selector}`);
+                }
+            };
+
+            /**
+             * Exibe uma notificação "toast" na tela.
+             * Requer a biblioteca Toastify-js carregada globalmente.
+             * @param {string} text - O texto da notificação.
+             * @param {number} [duration=5000] - Duração da notificação em milissegundos.
+             * @param {string} [gravity='bottom'] - Posição vertical ('top', 'bottom').
+             * @param {string} [position="center"] - Posição horizontal ('left', 'center', 'right').
+             */
+            function sendToast(text, duration = 5000, gravity = 'bottom', position = "center") {
+                // Adicionado: Verifica se Toastify está disponível antes de tentar usá-lo
+                if (typeof Toastify === 'undefined') {
+                    console.warn("Toastify-js não está carregado. Não é possível exibir o toast:", text);
+                    return;
+                }
+                Toastify({
+                    text: text,
+                    duration: duration,
+                    gravity: gravity,
+                    position: position,
+                    stopOnFocus: true,
+                    style: {
+                        background: "#000000"
+                    }
+                }).showToast();
+                debug(text);
+            };
+
+            /**
+             * Carrega um script JavaScript a partir de uma URL e o executa.
+             * @param {string} url - A URL do script.
+             * @param {string} label - Um rótulo para o script (usado para depuração/tracking).
+             * @returns {Promise<void>} Uma Promise que resolve quando o script é carregado e executado.
+             */
+            async function loadScript(url, label) {
+                debug(`Carregando script: ${url} (${label})`);
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const script = await response.text();
+                    eval(script);
+                    debug(`✅ Script carregado: ${label}`);
+                } catch (error) {
+                    console.error(`❌ Falha ao carregar script ${label} de ${url}:`, error);
+                    sendToast(`❌ Erro ao carregar script: ${label}`, 3000, 'top');
+                }
+            }
+
+            /**
+             * Carrega um arquivo CSS a partir de uma URL e o anexa ao <head> do documento.
+             * @param {string} url - A URL do arquivo CSS.
+             * @returns {Promise<void>} Uma Promise que resolve quando o CSS é carregado.
+             */
+            async function loadCss(url) {
+                debug(`Carregando CSS: ${url}`);
+                return new Promise((resolve, reject) => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = url;
+                    link.onload = () => {
+                        debug(`✅ CSS carregado: ${url}`);
+                        resolve();
+                    };
+                    link.onerror = (e) => {
+                        console.error(`❌ Falha ao carregar CSS de ${url}:`, e);
+                        reject(e);
+                    };
+                    document.head.appendChild(link);
+                });
+            }
+
+            // Define a altura e largura da caixa quando ela está expandida
+            const EXPANDED_HEIGHT = '300px';
+            const EXPANDED_WIDTH = '220px';
+            // Define a altura e largura da caixa quando ela está recolhida
+            const COLLAPSED_HEIGHT = '70px';
+            const COLLAPSED_WIDTH = '70px';
+
+            var box = document.createElement('div');
+            box.id = 'mr_andy_box';
+
+            // Aplica estilos CSS à caixa principal para o visual de "hacker"
+            // *** ESTILOS MAIS COMPATÍVEIS PARA FORÇAR VISIBILIDADE ***
+            box.style.cssText = `
+                position: fixed !important; /* Mantém position: fixed com alta prioridade */
+                width: ${COLLAPSED_WIDTH};
+                height: ${COLLAPSED_HEIGHT};
+                background: rgb(0,0,0);
+                border-radius: 15px;
+                border: 2px solid #00FF00;
+                box-shadow: 0 0 20px rgba(0,255,0,0.6);
+                z-index: 99999999 !important; /* Z-index EXTREMAMENTE alto ainda é crucial */
+                cursor: move;
+                overflow: hidden;
+                display: flex !important; /* Mantém display:flex com alta prioridade para garantir que apareça */
+                flex-direction: column;
+                align-items: center;
+                top: 20px !important; /* Posição inicial no canto superior com alta prioridade */
+                right: 20px !important; /* Posição inicial no canto superior direito com alta prioridade */
+                left: auto; /* Garante que 'left' não interfira, sem !important */
+                margin: 0;
+                padding: 0;
+            `;
+
+
+            var titleBar = document.createElement('div');
+            titleBar.style.width = '100%';
+            titleBar.style.padding = '5px';
+            titleBar.style.background = 'transparent';
+            titleBar.style.borderBottom = 'none';
+            titleBar.style.flexShrink = '0';
+            titleBar.style.cursor = 'pointer'; /* Cursor de ponteiro para indicar que é clicável */
+            titleBar.style.display = 'flex';
+            titleBar.style.justifyContent = 'center';
+            titleBar.style.alignItems = 'center';
+            titleBar.style.boxSizing = 'border-box';
+
+            var iconImage = document.createElement('img');
+            // ATENÇÃO: Use o URL RAW público da sua imagem no GitHub aqui!
+            // Exemplo: 'https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/ICONE.jpg'
+            // CORRIGIDO: URL da imagem usando corsproxy para tentar resolver problemas de carregamento
+            iconImage.src = 'https://corsproxy.io/?url=https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICO/main/ICONE.jpg';
+            iconImage.alt = 'Hub Icon';
+            iconImage.style.width = '60px';
+            iconImage.style.height = '60px';
+            iconImage.style.borderRadius = '15px';
+            iconImage.style.border = 'none';
+            iconImage.style.boxShadow = 'none';
+            iconImage.style.opacity = '1 !important'; // Garante que a imagem tenha opacidade 1
+            iconImage.style.display = 'block !important'; // Garante que a imagem esteja visível
+
+            // O handler de erro para um placeholder genérico caso a imagem fornecida falhe.
+            iconImage.onerror = function() {
+                this.src = 'https://placehold.co/60x60/333333/FFFFFF?text=ICON'; // Placeholder genérico
+                this.alt = 'Erro ao carregar imagem, usando placeholder.';
+                console.error('Erro ao carregar a imagem do usuário, usando placeholder.');
+            };
+
+            var titleText = document.createElement('span');
+            titleText.innerText = 'ANDY HACKS';
+            titleText.style.color = '#00FF00';
+            titleText.style.fontSize = '20px';
+            titleText.style.fontWeight = 'bold';
+            titleText.style.textAlign = 'center';
+            titleText.style.textShadow = '0 0 5px #00FF00';
+            titleText.style.textTransform = 'uppercase';
+            titleText.style.display = 'none';
+
+            titleBar.appendChild(iconImage);
+            titleBar.appendChild(titleText);
+            box.appendChild(titleBar);
+
+            var contentArea = document.createElement('div');
+            contentArea.className = 'content-area';
+            contentArea.style.padding = '15px';
+            contentArea.style.color = 'white';
+            contentArea.style.fontSize = '14px';
+            contentArea.style.textAlign = 'center';
+            contentArea.style.flexGrow = '1'; /* Permite que a área de conteúdo cresça */
+            contentArea.style.display = 'none';
+            contentArea.style.flexDirection = 'column';
+            contentArea.style.gap = '10px';
+            contentArea.style.justifyContent = 'flex-start';
+            contentArea.style.background = 'rgb(0,0,0)'; // Fundo preto sólido
+            contentArea.style.overflowY = 'auto'; // Habilita a rolagem vertical
+            contentArea.style.overflowX = 'hidden';
+            contentArea.style.minHeight = '0';
+            // contentArea.style.height = '100%'; // REMOVIDO: deixamos flex-grow gerenciar a altura
+
+
+            var mainMenuContainer = document.createElement('div');
+            mainMenuContainer.style.display = 'flex';
+            mainMenuContainer.style.flexDirection = 'column';
+            mainMenuContainer.style.gap = '10px';
+            mainMenuContainer.style.width = '100%';
+            mainMenuContainer.style.flexGrow = '1'; /* GARANTE que ele preencha o espaço vertical */
+            mainMenuContainer.style.overflowY = 'auto'; /* Adicionado overflow para rolagem dentro do menu principal se necessário */
+
+
+            var khanwareFeaturesContainer = document.createElement('div');
+            khanwareFeaturesContainer.style.display = 'none';
+            khanwareFeaturesContainer.style.flexDirection = 'column';
+            khanwareFeaturesContainer.style.gap = '10px';
+            khanwareFeaturesContainer.style.width = '100%';
+            khanwareFeaturesContainer.style.flexGrow = '1'; /* GARANTE que ele preencha o espaço vertical */
+            khanwareFeaturesContainer.style.overflowY = 'auto'; /* Será definido como 'hidden' ao ocultar */
+            khanwareFeaturesContainer.style.overflowX = 'hidden';
+            khanwareFeaturesContainer.style.paddingRight = '5px';
+            /* Corrigido: sintaxe de box-sizing */
+            khanwareFeaturesContainer.style.boxSizing = 'border-box';
+            khanwareFeaturesContainer.style.background = 'rgb(0,0,0)'; // Fundo preto sólido
+
+
+            const featureDisplayNames = {
+                questionSpoof: 'SIMULAR QUESTÕES',
+                autoAnswer: 'RESPOSTA AUTOMÁTICA',
+                darkMode: 'MODO ESCURO', /* Adicionado: Nome de exibição para o modo escuro */
+            };
+
+            // --- Função para criar um item de alternância (toggle) para as funcionalidades do Khanware ---
+            // Adicionado parâmetro 'silent' para controlar notificações
+            function createFeatureToggleItem(featureKey) {
+                var itemContainer = document.createElement('div');
+                itemContainer.style.display = 'flex';
+                itemContainer.style.justifyContent = 'space-between';
+                itemContainer.style.alignItems = 'center';
+                itemContainer.style.width = '100%';
+                itemContainer.style.padding = '10px 5px';
+                itemContainer.style.background = '#333';
+                itemContainer.style.color = 'white';
+                itemContainer.style.fontSize = '14px';
+                itemContainer.style.fontWeight = 'bold';
+                itemContainer.style.borderRadius = '8px';
+                itemContainer.style.cursor = 'pointer';
+                itemContainer.style.boxShadow = '0 0 5px rgba(255,255,255,0.2)';
+                itemContainer.style.transition = 'background 0.2s ease, box-shadow 0.2s ease';
+                itemContainer.style.boxSizing = 'border-box';
+
+                var itemText = document.createElement('span');
+                itemText.innerText = featureDisplayNames[featureKey] || featureKey.replace(/([A-Z])/g, ' $1').toUpperCase();
+                itemContainer.appendChild(itemText);
+
+                var itemIndicator = document.createElement('label'); /* Mudado para label para o toggle */
+                itemIndicator.className = 'toggle-switch';
+
+                var inputToggle = document.createElement('input');
+                inputToggle.type = 'checkbox';
+                inputToggle.checked = window.features[featureKey]; /* Define o estado inicial */
+
+                var sliderSpan = document.createElement('span');
+                sliderSpan.className = 'slider';
+
+                itemIndicator.appendChild(inputToggle);
+                itemIndicator.appendChild(sliderSpan);
+                itemContainer.appendChild(itemIndicator);
+
+
+                // Função para atualizar o visual do indicador e o estado da feature
+                // 'silent' é true para inicialização, false para interação do usuário
+                function updateFeatureState(silent = false) {
+                    const isActive = window.features[featureKey];
+                    inputToggle.checked = isActive; /* Sincroniza o input com o estado */
+                    if (!silent) { // Só exibe toast se não for uma atualização silenciosa
+                        sendToast(`${itemText.innerText} ${isActive ? 'ATIVADO' : 'DESATIVADO'}`, 1000, 'top');
+                    }
+                }
+
+                // Listener no input, não no itemContainer, para melhor controle
+                inputToggle.addEventListener('change', (e) => {
+                    e.stopPropagation(); /* Impede a propagação para o itemContainer se ele tivesse um clique */
+                    window.features[featureKey] = e.target.checked; /* Alterna o estado da feature */
+                    updateFeatureState(false); // Chama com silent=false para mostrar o toast na interação do usuário
+
+                    if (featureKey === 'autoAnswer' && window.autoAnswerModule) {
+                        window.autoAnswerModule.toggle(window.features.autoAnswer);
+                    } else if (featureKey === 'darkMode') { /* Adicionado: lógica para o Modo Escuro */
+                        if (typeof DarkReader !== 'undefined') {
+                            if (window.features.darkMode) {
+                                // Ignora o elemento do hub pelo ID para que o modo escuro não o afete
+                                // e também os filhos diretos do hub.
+                                DarkReader.enable({
+                                    ignoreInlineStyle: true,
+                                    ignoreImageAnalysis: true,
+                                    ignoreSelectors: ['#mr_andy_box', '#mr_andy_box *']
+                                });
+                                sendToast("Modo Escuro: Ativado!", 1500, 'top', 'center');
+                            } else {
+                                DarkReader.disable();
+                                sendToast("Modo Escuro: Desativado.", 1500, 'top', 'center');
+                            }
+                            debug(`Dark Mode: ${window.features.darkMode ? 'Enabled' : 'Disabled'}.`);
+                        } else {
+                            sendToast("DarkReader não encontrado. Impossível alternar modo escuro.", 3000, 'top', 'center');
+                            console.warn("DarkReader JS library is not loaded.");
+                        }
+                    }
+                });
+
+                // Retorna o itemContainer e a função updateFeatureState para controle externo
+                return { element: itemContainer, updateState: updateFeatureState };
+            }
+
+            // --- Função para criar a seção de controle do atraso da auto-resposta ---
+            function createAutoAnswerDelayControl() {
+                var delayContainer = document.createElement('div');
+                delayContainer.style.display = 'flex';
+                delayContainer.style.flexDirection = 'column';
+                delayContainer.style.gap = '5px';
+                delayContainer.style.width = '100%';
+                delayContainer.style.padding = '10px 5px';
+                delayContainer.style.background = '#333';
+                delayContainer.style.color = 'white';
+                delayContainer.style.fontSize = '14px';
+                delayContainer.style.fontWeight = 'bold';
+                delayContainer.style.borderRadius = '8px';
+                delayContainer.style.boxShadow = '0 0 5px rgba(255,255,255,0.2)';
+                delayContainer.style.boxSizing = 'border-box';
+
+                var currentDelayValueSpan = document.createElement('span');
+                currentDelayValueSpan.id = 'currentDelayValue';
+                // Exibe o atraso atual com uma casa decimal e 's'.
+                currentDelayValueSpan.innerText = window.featureConfigs.autoAnswerDelay.toFixed(1) + 's';
+                delayContainer.appendChild(currentDelayValueSpan);
+
+                var delayInput = document.createElement('input');
+                delayInput.type = 'range'; // Alterado para type="range"
+                delayInput.id = 'autoAnswerDelayInput';
+                delayInput.min = '0.8'; // Valor no slider correspondente ao atraso mais rápido (0.8s)
+                delayInput.max = '5.0';  // Valor no slider correspondente ao atraso mais lento (5.0s)
+                delayInput.step = '0.1'; // Incremento de 0.1 segundos
+
+                // Define a posição inicial do slider. Se o atraso padrão é 5.0s (lento),
+                // o slider deve começar no mínimo (0.8 na escala do slider).
+                // A fórmula (5.8 - valor_desejado_de_atraso) inverte a relação.
+                delayInput.value = (5.8 - window.featureConfigs.autoAnswerDelay).toFixed(1);
+                delayInput.style.width = '100%';
+                delayInput.style.marginTop = '5px';
+
+                // Impede que o evento mousedown no slider se propague para o elemento pai (o hub),
+                // evitando que o hub seja arrastado ao tentar mover o slider.
+                delayInput.addEventListener('mousedown', (event) => {
+                    event.stopPropagation();
+                });
+
+                delayInput.addEventListener('input', (event) => {
+                    event.stopPropagation(); // Impede a propagação para a caixa principal
+                    let sliderRawValue = parseFloat(event.target.value);
+                    // Calcula o atraso real: arrastar para a direita (valor do slider aumenta) diminui o atraso.
+                    let calculatedDelay = (5.8 - sliderRawValue);
+                    currentDelayValueSpan.innerText = calculatedDelay.toFixed(1) + 's';
+                    window.featureConfigs.autoAnswerDelay = calculatedDelay;
+                    debug('Atraso da Auto-Resposta (arrastando):', window.featureConfigs.autoAnswerDelay, 'segundos');
+                    if (window.features.autoAnswer && window.autoAnswerModule) {
+                        window.autoAnswerModule.updateDelay(window.featureConfigs.autoAnswerDelay);
+                    }
+                });
+
+                delayInput.addEventListener('change', (event) => {
+                    event.stopPropagation(); // Impede a propagação para a caixa principal
+                    let sliderRawValue = parseFloat(event.target.value);
+                    let calculatedDelay = (5.8 - sliderRawValue);
+                    currentDelayValueSpan.innerText = calculatedDelay.toFixed(1) + 's';
+                    window.featureConfigs.autoAnswerDelay = calculatedDelay;
+                    sendToast(`Atraso: ${calculatedDelay.toFixed(1)}s`, 800, 'top');
+                    debug('Atraso da Auto-Resposta (final):', window.featureConfigs.autoAnswerDelay, 'segundos');
+                    if (window.features.autoAnswer && window.autoAnswerModule) {
+                        window.autoAnswerModule.updateDelay(window.featureConfigs.autoAnswerDelay);
+                    }
+                });
+                delayContainer.appendChild(delayInput);
+
+                return delayContainer;
+            }
+
+            // --- Botão "KHAN ACADEMY" (no menu principal) ---
+            var khanwareFeaturesButton = document.createElement('div');
+            khanwareFeaturesButton.innerText = 'KHAN ACADEMY';
+            khanwareFeaturesButton.className = 'hub-button';
+            khanwareFeaturesButton.onclick = function(e) {
+                e.stopPropagation();
+                mainMenuContainer.style.display = 'none';
+
+                khanwareFeaturesContainer.innerHTML = ''; // Limpa antes de adicionar
+                // Garante que a barra de rolagem está ativa quando o menu de features é exibido
+                khanwareFeaturesContainer.style.overflowY = 'auto';
+
+
+                // Cria e adiciona o toggle de questionSpoof. Passa 'true' para silent.
+                const questionSpoofToggle = createFeatureToggleItem('questionSpoof');
+                khanwareFeaturesContainer.appendChild(questionSpoofToggle.element);
+                questionSpoofToggle.updateState(true); // Inicializa silenciosamente
+
+                // Adicionado: Seção combinada para Auto-Resposta (toggle e delay)
+                const autoAnswerToggle = createFeatureToggleItem('autoAnswer');
+                const autoAnswerDelayControl = createAutoAnswerDelayControl();
+
+                var autoAnswerSection = document.createElement('div');
+                autoAnswerSection.style.display = 'flex';
+                autoAnswerSection.style.flexDirection = 'column';
+                autoAnswerSection.style.gap = '10px';
+                autoAnswerSection.style.width = '100%';
+                autoAnswerSection.appendChild(autoAnswerToggle.element);
+                autoAnswerSection.appendChild(autoAnswerDelayControl);
+                khanwareFeaturesContainer.appendChild(autoAnswerSection);
+                autoAnswerToggle.updateState(true); // Inicializa silenciosamente
+
+                // Adicionado: Botão para alternar o Modo Escuro como um toggle item
+                const darkModeToggle = createFeatureToggleItem('darkMode');
+                khanwareFeaturesContainer.appendChild(darkModeToggle.element);
+                darkModeToggle.updateState(true); // Inicializa silenciosamente
+
+                khanwareFeaturesContainer.appendChild(backButton);
+
+                khanwareFeaturesContainer.style.display = 'flex';
+            };
+            mainMenuContainer.appendChild(khanwareFeaturesButton);
+
+            // --- Botão "RECARREGAR HUB" (no menu principal) ---
+            var reloadButton = document.createElement('div');
+            reloadButton.innerText = 'RECARREGAR HUB';
+            reloadButton.className = 'hub-button action-button';
+            reloadButton.onclick = function(e) {
+                e.stopPropagation();
+                sendToast("Recarregando o Hub...", 2000);
+                setTimeout(() => location.reload(), 500);
+            };
+            mainMenuContainer.appendChild(reloadButton);
+
+
+            contentArea.appendChild(mainMenuContainer);
+            contentArea.appendChild(khanwareFeaturesContainer);
+
+            // --- Botão VOLTAR (no sub-menu) ---
+            var backButton = document.createElement('div');
+            backButton.innerText = 'VOLTAR';
+            backButton.className = 'hub-button action-button';
+            backButton.style.marginTop = 'auto';
+            backButton.onclick = function(e) {
+                e.stopPropagation();
+                khanwareFeaturesContainer.style.display = 'none';
+                // Garante que a barra de rolagem seja oculta ao voltar
+                khanwareFeaturesContainer.style.overflowY = 'hidden';
+                mainMenuContainer.style.display = 'flex';
+            };
+
+
+            box.appendChild(contentArea);
+
+            // --- Versão Beta no Finalzinho ---
+            var versionText = document.createElement('div');
+            versionText.innerText = `VERSÃO ${ver}`;
+            versionText.style.width = '100%';
+            versionText.padding = '5px 0';
+            versionText.style.color = 'rgba(255,255,255,0.4)';
+            versionText.style.fontSize = '10px';
+            versionText.style.textAlign = 'center';
+            versionText.style.marginTop = 'auto';
+            versionText.style.textTransform = 'uppercase';
+            versionText.style.display = 'none';
+
+            box.appendChild(versionText);
+
+            document.body.appendChild(box);
+
+            // --- DRAG AND DROP / TOGGLE HUB LOGIC ---
+
+            // LOG DE DIAGNÓSTICO: Verifica as dimensões do box principal após ser adicionado
+            console.log(`[Hub Debug] Box #mr_andy_box - Width: ${box.offsetWidth}px, Height: ${box.offsetHeight}px, Display: ${window.getComputedStyle(box).display}, Opacity: ${window.getComputedStyle(box).opacity}`);
+
+            let isExpanded = false;
+            let dragStartX, dragStartY;
+            let isDragging = false; // Flag para diferenciar arrasto de clique
+
+            // Função para alternar o estado do hub (expandir/recolher)
+            function toggleHub() {
+                if (isExpanded) {
+                    box.style.height = COLLAPSED_HEIGHT;
+                    box.style.width = COLLAPSED_WIDTH;
+                    box.style.background = 'rgb(0,0,0) !important'; // Fundo preto sólido quando minimizado
+                    box.style.borderRadius = '15px !important';
+                    box.style.border = '2px solid #00FF00 !important';
+                    box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6) !important';
+                    box.style.zIndex = '99999999 !important';
+                    box.style.overflow = 'hidden !important';
+                    box.style.display = 'flex !important';
+                    box.style.flexDirection = 'column !important';
+                    box.style.alignItems = 'center !important';
+                    box.style.transition = 'height 0.3s ease-in-out, width 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-radius 0.3s ease-in-out';
+
+                    iconImage.style.setProperty('display', 'block', 'important');
+                    titleText.style.setProperty('display', 'none', 'important');
+
+                    titleBar.style.background = 'transparent';
+                    titleBar.style.borderBottom = 'none';
+                    titleBar.style.cursor = 'pointer'; /* Cursor de clique na barra de título */
+
+                    khanwareFeaturesContainer.style.display = 'none';
+                    khanwareFeaturesContainer.style.overflowY = 'hidden'; // Oculta overflow ao recolher
+                    mainMenuContainer.style.display = 'flex';
+
+                } else {
+                    box.style.height = EXPANDED_HEIGHT;
+                    box.style.width = EXPANDED_WIDTH;
+                    box.style.background = 'rgb(0,0,0) !important'; // AGORA PRETO SÓLIDO AO EXPANDIR!
+                    box.style.borderRadius = '15px !important';
+                    box.style.border = '2px solid #00FF00 !important';
+                    box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6) !important';
+                    box.style.overflow = 'hidden !important';
+                    // Cursor de 'move' já está definido globalmente no 'box.style'
+
+                    titleBar.style.background = 'rgba(0,255,0,0.2)';
+                    titleBar.style.borderBottom = '1px solid #00FF00';
+                    titleBar.style.cursor = 'pointer'; /* Mantém o cursor de clique na barra de título */
+
+                    iconImage.style.setProperty('display', 'none', 'important');
+                    titleText.style.setProperty('display', 'block', 'important');
+                    setTimeout(() => {
+                        contentArea.style.display = 'flex';
+                        versionText.style.display = 'block';
+                        // khanwareFeaturesContainer.style.overflowY = 'auto'; // Ativa overflow ao expandir se necessário (gerenciado pelo clique no botão)
+                    }, 300);
+                }
+                isExpanded = !isExpanded;
+            }
+
+            // --- Funcionalidade de Arrastar e Soltar (Drag and Drop) e Toggle ---
+
+            // A barra de título agora é a única responsável por expandir/recolher o hub
+            titleBar.onclick = function(e) {
+                // Se um arrasto acabou de ocorrer, impede o toggle.
+                // A flag 'isDragging' é resetada no 'mouseup' do arrasto.
+                if (isDragging) {
+                    isDragging = false; // Garante reset para o próximo evento
+                    return;
+                }
+                e.stopPropagation(); // Impede que o clique se propague para elementos pais
+                toggleHub();
+            };
+
+            // Permite arrastar o box inteiro (minimizado ou expandido)
+            box.onmousedown = function(e) {
+                // Ignora cliques que não sejam do botão esquerdo do mouse
+                if (e.button !== 0) return;
+
+                e.preventDefault(); // Previne o comportamento padrão de arrasto do navegador (ex: seleção de texto)
+
+                var shiftX = e.clientX - box.getBoundingClientRect().left;
+                var shiftY = e.clientY - box.getBoundingClientRect().top;
+
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                isDragging = false; // Reset da flag de arrasto no início do clique
+
+                function moveAt(pageX, pageY) {
+                    let newLeft = pageX - shiftX;
+                    let newTop = pageY - shiftY;
+
+                    // Garante que a caixa permaneça dentro dos limites da janela
+                    newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - box.offsetWidth));
+                    newTop = Math.max(0, Math.min(newTop, window.innerHeight - box.offsetHeight));
+
+                    box.style.left = newLeft + 'px';
+                    box.style.top = newTop + 'px';
+                }
+
+                function onMouseMove(e) {
+                    // Detecta se é um arrasto (movimento maior que 5 pixels)
+                    if (Math.abs(e.clientX - dragStartX) > 5 || Math.abs(e.clientY - dragStartY) > 5) {
+                        isDragging = true;
+                    }
+                    moveAt(e.pageX, e.pageY);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+
+                document.onmouseup = function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.onmouseup = null;
+                    // IMPORTANTE: isDragging é resetada aqui.
+                };
+            };
+
+            // Previne o comportamento padrão de arrastar imagens
+            box.ondragstart = function() {
+                return false;
+            };
+
+            // --- Lógica de Simular Questões (questionSpoof) e Auto-Resposta (autoAnswer) ---
+            const phrases = [
+                "🔥 Get good, get [Khanware](https://github.com/Niximkk/Khanware/)!",
+                "🤍 Made by [@im.nix](https://e-z.bio/sounix).",
+                "☄️ By [Niximkk/khanware](https://github.com/Niximkk/Khanware/)!",
+                "🌟 Star the project on [GitHub](https://github.com/Niximkk/Khanware/)!",
+                "🦢 Nix fez a boa ;)",
+            ];
+
+            const originalFetch = window.fetch;
+
+            // Define o módulo de auto-resposta para ser acessível globalmente
+            window.autoAnswerModule = (() => {
+                let isEnabled = window.features.autoAnswer;
+                let delaySeconds = window.featureConfigs.autoAnswerDelay;
+                let autoAnswerTimeout = null; // Usaremos setTimeout para agendamento preciso
+
+                /**
+                 * Inicia o processo de auto-resposta.
+                 */
+                function startAutoAnswering() {
+                    console.log(`[AutoAnswerModule] Iniciando auto-resposta com atraso de ${delaySeconds} segundos.`);
+                    sendToast("Auto-Resposta: Iniciada!", 1500, 'top');
+                    // Limpa qualquer timeout existente para evitar múltiplos loops
+                    if (autoAnswerTimeout) clearTimeout(autoAnswerTimeout);
+                    // Inicia o loop de agendamento
+                    scheduleNextCheck();
+                }
+
+                /**
+                 * Para o processo de auto-resposta.
+                 */
+                function stopAutoAnswering() {
+                    console.log("[AutoAnswerModule] Parando auto-resposta.");
+                    sendToast("Auto-Resposta: Parada.", 1500, 'top');
+                    if (autoAnswerTimeout) {
+                        clearTimeout(autoAnswerTimeout);
+                        autoAnswerTimeout = null;
+                    }
+                }
+
+                /**
+                 * Agenda a próxima verificação e clique nos botões de progresso.
+                 */
+                async function scheduleNextCheck() { // Agora é uma função async
+                    if (!isEnabled) {
+                        return; // Para se a funcionalidade estiver desativada
+                    }
+
+                    // Tenta selecionar a opção correta primeiro
+                    const radioInputs = document.querySelectorAll('input[type="radio"]');
+                    let foundAndClickedRadio = false;
+
+                    radioInputs.forEach(radioInput => {
+                        const parentTextContainer = radioInput.closest('[data-test-id="radio-button-option"]') ||
+                                                    radioInput.closest('.perseus-radio-option') ||
+                                                    radioInput.closest('label');
+
+                        if (parentTextContainer && parentTextContainer.innerText.includes("Resposta correta.")) {
+                            if (!radioInput.checked) {
+                                radioInput.click();
+                                sendToast("🚀 Resposta Automática: Selecionado 'Resposta correta'!", 800);
+                                debug("autoAnswer: Selecionou rádio button correto.");
+                                foundAndClickedRadio = true;
+                            }
+                        }
+                    });
+
+                    if (!foundAndClickedRadio) {
+                        debug("autoAnswer: Nenhuma opção de rádio correta (para spoof) encontrada ou já selecionada.");
+                    }
+
+                    // Agora tenta clicar nos botões de progresso
+                    let clickedAButton = false;
+                    // Definir botões na ordem de preferência para clique: Verificar, Próxima Questão, Continuar
+                    const buttonsToTry = [
+                        { selector: 'button[data-test-id="challenge-check-answer-button"]', text: 'Verificar', isTextMatch: false },
+                        { selector: 'button[data-test-id="next-question-button"]', text: 'Próxima Questão', isTextMatch: false },
+                        // Mais genéricos por conteúdo de texto
+                        { selector: 'button:not([disabled])', text: 'verificar', isTextMatch: true },
+                        { selector: 'button:not([disabled])', text: 'próxima pergunta', isTextMatch: true }, // Adicionado "próxima pergunta"
+                        { selector: 'button:not([disabled])', text: 'próxima questão', isTextMatch: true },
+                        { selector: 'button:not([disabled])', text: 'continuar', isTextMatch: true }
+                    ];
+
+                    for (const btnInfo of buttonsToTry) {
+                        const elements = document.querySelectorAll(btnInfo.selector);
+                        for (const element of elements) {
+                            let match = false;
+                            if (btnInfo.isTextMatch) {
+                                if (element.textContent.trim().toLowerCase() === btnInfo.text.toLowerCase()) {
+                                    match = true;
+                                }
+                            } else {
+                                match = true; // Para data-test-id, o seletor já garante a correspondência
+                            }
+
+                            // Garante que o botão é visível, não está desabilitado e que a correspondência é verdadeira
+                            if (match && element.offsetWidth > 0 && element.offsetHeight > 0 && !element.disabled) {
+                                element.focus(); // Boa prática para focar antes de clicar
+                                element.click();
+                                sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
+                                debug(`autoAnswer: Clicou em '${element.textContent.trim()}'.`);
+                                clickedAButton = true;
+                                break; // Sai do loop de botões após clicar em um
+                            } else if (match) {
+                                debug(`autoAnswer: Botão '${element.textContent.trim()}' encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
+                            }
+                        }
+                        if (clickedAButton) break; // Sai do loop externo se um botão já foi clicado
+                    }
+
+                    // Sempre aguarda o atraso configurado ANTES da próxima verificação, independentemente se um botão foi clicado.
+                    await delay(delaySeconds * 1000);
+
+                    // Em seguida, agenda a próxima verificação
+                    scheduleNextCheck();
+                }
+
+                return {
+                    toggle: (enable) => {
+                        isEnabled = enable;
+                        if (isEnabled) {
+                            startAutoAnswering();
+                        } else {
+                            stopAutoAnswering();
+                        }
+                    },
+                    updateDelay: (newDelay) => {
+                        delaySeconds = newDelay;
+                        console.log(`[AutoAnswerModule] Atraso de auto-resposta atualizado para ${delaySeconds} segundos.`);
+                        // Se a auto-resposta estiver ativa, reinicia o agendamento para aplicar o novo atraso imediatamente
+                        if (isEnabled) {
+                            stopAutoAnswering(); // Limpa o timeout atual
+                            startAutoAnswering(); // Inicia com o novo atraso
+                        }
+                    }
+                };
+            })();
+
+
+            // Sobrescreve a função fetch global
+            window.fetch = async function (input, init) {
+                const originalResponse = await originalFetch.apply(this, arguments);
+                const clonedResponse = originalResponse.clone();
+
+                try {
+                    const responseBody = await clonedResponse.text();
+                    let responseObj = JSON.parse(responseBody);
+
+                    // Verifica se a feature questionSpoof está ativa E se a resposta contém dados de item de avaliação
+                    if (window.features.questionSpoof && responseObj?.data?.assessmentItem?.item?.itemData) {
+                        debug("questionSpoof: Entrou no bloco de modificação de questão!");
+                        let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
+
+                        itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false };
+                        itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
+                        itemData.question.widgets = { "radio 1": { type: "radio",  options: { choices: [ { content: "Resposta correta.", correct: true }, { content: "Resposta incorreta.", correct: false } ] } } };
+
+                        responseObj.data.assessmentItem.item.itemData = JSON.stringify(itemData);
+                        sendToast("🔓 Questão exploitada.", 1000);
+                        return new Response(JSON.stringify(responseObj), { status: originalResponse.status, statusText: originalResponse.statusText, headers: originalResponse.headers });
+                    }
+
+                    // A lógica de clique nos botões de progresso é gerenciada pelo autoAnswerModule.
+                    // Se window.features.autoAnswer estiver ativo, o módulo já estará verificando o DOM.
+                    // Não é necessário um setTimeout adicional aqui.
+
+                } catch (e) {
+                    debug(`🚨 Erro em questionSpoof.js ou autoAnswer.js no fetch override:\n${e}`);
+                }
+                return originalResponse;
+            };
+
+
+            // IIFE auto-executável para inicialização
+            (async () => {
+                if (typeof DarkReader !== 'undefined') {
+                    // Ativa DarkReader somente se window.features.darkMode estiver true no início
+                    if (window.features.darkMode) {
+                        DarkReader.setFetchMethod(window.fetch);
+                        // O mais importante: configura DarkReader para IGNORAR o hub e seus filhos
+                        DarkReader.enable({
+                            ignoreInlineStyle: true,
+                            ignoreImageAnalysis: true,
+                            // Adicionado '#mr_andy_box *' para cobrir todos os filhos
+                            ignoreSelectors: ['#mr_andy_box', '#mr_andy_box *']
+                        });
+                        sendToast("Modo Escuro: Ativado (estado inicial)!", 2000, 'top');
+                    } else {
+                        // Garante que o DarkReader está desativado se a feature não estiver ativa
+                        DarkReader.disable();
+                        debug("Modo Escuro: Desativado (estado inicial).");
+                    }
+                } else {
+                    console.warn("DarkReader não encontrado. Certifique-se de que o CDN esteja carregado.");
+                }
+
+                sendToast("Hub carregado! Clique no ícone para expandir.", 3000);
+                playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/gcelzszy.wav');
+                await delay(500);
+                sendToast(`⭐ Bem vindo(a) de volta: ${user.nickname || "Usuário"}`);
+            })();
+
+        }; // Fim do window.onload
+    </script>
+</body>
+</html>
