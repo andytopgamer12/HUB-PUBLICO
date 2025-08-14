@@ -365,7 +365,7 @@
             box.style.zIndex = 99999; /* Z-index MUITO alto para garantir que ele fique na frente */
             box.style.cursor = 'move'; /* Cursor padrão para arrastar, sempre */
             box.style.overflow = 'hidden'; /* Mantém oculto para contentes que vazarem da caixa principal */
-            box.style.display = 'flex'; // Garante que o box inicial esteja visível
+            box.style.display = 'flex';
             box.style.flexDirection = 'column';
             box.style.alignItems = 'center';
             box.style.transition = 'height 0.3s ease-in-out, width 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-radius 0.3s ease-in-out';
@@ -396,7 +396,7 @@
             iconImage.style.borderRadius = '15px';
             iconImage.style.border = 'none';
             iconImage.style.boxShadow = 'none';
-            iconImage.style.opacity = '1'; // Garante que a imagem tenha opacidade 1
+            iconImage.style.opacity = '1';
             iconImage.style.display = 'block';
 
             // O handler de erro para um placeholder genérico caso a imagem fornecida falhe.
@@ -712,10 +712,9 @@
 
             document.body.appendChild(box);
 
-            // --- DRAG AND DROP / TOGGLE HUB LOGIC ---
-
-            // LOG DE DIAGNÓSTICO: Verifica as dimensões do box principal após ser adicionado
-            console.log(`[Hub Debug] Box #mr_andy_box - Width: ${box.offsetWidth}px, Height: ${box.offsetHeight}px, Display: ${window.getComputedStyle(box).display}, Opacity: ${window.getComputedStyle(box).opacity}`);
+            // Removendo o cálculo de 'initialLeft' e 'initialTop' para simplificar.
+            // O hub será posicionado apenas por box.style.right e box.style.top no CSS.
+            // A posição inicial agora é fixa (right: 20px; top: 20px;) definida no estilo do 'box'.
 
             let isExpanded = false;
             let dragStartX, dragStartY;
@@ -939,6 +938,8 @@
                                 sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
                                 debug(`autoAnswer: Clicou em '${element.textContent.trim()}'.`);
                                 clickedAButton = true;
+                                // Se um botão foi clicado, aguarda o atraso ANTES de tentar o próximo ciclo.
+                                await delay(delaySeconds * 1000);
                                 break; // Sai do loop de botões após clicar em um
                             } else if (match) {
                                 debug(`autoAnswer: Botão '${element.textContent.trim()}' encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
@@ -947,8 +948,12 @@
                         if (clickedAButton) break; // Sai do loop externo se um botão já foi clicado
                     }
 
-                    // Sempre aguarda o atraso configurado ANTES da próxima verificação, independentemente se um botão foi clicado.
-                    await delay(delaySeconds * 1000);
+                    // Se nada foi clicado, ainda aguarda o atraso antes da próxima verificação
+                    if (!clickedAButton) {
+                        debug("autoAnswer: Nenhum botão de progresso clicável encontrado neste ciclo. Aguardando próximo ciclo.");
+                        await delay(delaySeconds * 1000); // Aguarda antes de tentar novamente
+                    }
+
 
                     // Em seguida, agenda a próxima verificação
                     scheduleNextCheck();
