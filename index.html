@@ -174,9 +174,7 @@
 <body>
     <!-- O script do Hub Khanware será injetado aqui -->
     <script>
-        // Use uma função auto-executável para encapsular o código e evitar poluir o escopo global.
-        // O código principal só será executado quando a DOM estiver pronta e a janela carregada.
-        window.onload = function() {
+        (function() {
             // Verifica se a caixa 'mr_andy_box' já existe para evitar duplicatas.
             if (document.getElementById('mr_andy_box')) {
                 return;
@@ -280,7 +278,6 @@
              * @param {string} [position="center"] - Posição horizontal ('left', 'center', 'right').
              */
             function sendToast(text, duration = 5000, gravity = 'bottom', position = "center") {
-                // Adicionado: Verifica se Toastify está disponível antes de tentar usá-lo
                 if (typeof Toastify === 'undefined') {
                     console.warn("Toastify-js não está carregado. Não é possível exibir o toast:", text);
                     return;
@@ -365,7 +362,7 @@
             box.style.zIndex = 99999; /* Z-index MUITO alto para garantir que ele fique na frente */
             box.style.cursor = 'move'; /* Cursor padrão para arrastar, sempre */
             box.style.overflow = 'hidden'; /* Mantém oculto para contentes que vazarem da caixa principal */
-            box.style.display = 'flex'; // Garante que o box inicial esteja visível
+            box.style.display = 'flex';
             box.style.flexDirection = 'column';
             box.style.alignItems = 'center';
             box.style.transition = 'height 0.3s ease-in-out, width 0.3s ease-in-out, background 0.3s ease-in-out, border 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-radius 0.3s ease-in-out';
@@ -388,15 +385,14 @@
             var iconImage = document.createElement('img');
             // ATENÇÃO: Use o URL RAW público da sua imagem no GitHub aqui!
             // Exemplo: 'https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/ICONE.jpg'
-            // CORRIGIDO: URL da imagem usando corsproxy para tentar resolver problemas de carregamento
-            iconImage.src = 'https://corsproxy.io/?url=https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICO/main/ICONE.jpg';
+            iconImage.src = 'https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICHO/main/ICONE.jpg'; // <-- SUBSTITUA ESTE URL PELO SEU!
             iconImage.alt = 'Hub Icon';
             iconImage.style.width = '60px';
             iconImage.style.height = '60px';
             iconImage.style.borderRadius = '15px';
             iconImage.style.border = 'none';
             iconImage.style.boxShadow = 'none';
-            iconImage.style.opacity = '1'; // Garante que a imagem tenha opacidade 1
+            iconImage.style.opacity = '1';
             iconImage.style.display = 'block';
 
             // O handler de erro para um placeholder genérico caso a imagem fornecida falhe.
@@ -712,10 +708,9 @@
 
             document.body.appendChild(box);
 
-            // --- DRAG AND DROP / TOGGLE HUB LOGIC ---
-
-            // LOG DE DIAGNÓSTICO: Verifica as dimensões do box principal após ser adicionado
-            console.log(`[Hub Debug] Box #mr_andy_box - Width: ${box.offsetWidth}px, Height: ${box.offsetHeight}px, Display: ${window.getComputedStyle(box).display}, Opacity: ${window.getComputedStyle(box).opacity}`);
+            // Removendo o cálculo de 'initialLeft' e 'initialTop' para simplificar.
+            // O hub será posicionado apenas por box.style.right e box.style.top no CSS.
+            // A posição inicial agora é fixa (right: 20px; top: 20px;) definida no estilo do 'box'.
 
             let isExpanded = false;
             let dragStartX, dragStartY;
@@ -879,12 +874,24 @@
                 /**
                  * Agenda a próxima verificação e clique nos botões de progresso.
                  */
-                async function scheduleNextCheck() { // Agora é uma função async
+                function scheduleNextCheck() {
                     if (!isEnabled) {
                         return; // Para se a funcionalidade estiver desativada
                     }
+                    autoAnswerTimeout = setTimeout(() => {
+                        // Tenta clicar nos botões de progresso
+                        checkAndClickProgressButton();
+                        // Agenda a próxima verificação, independentemente do clique, para continuar a observação
+                        scheduleNextCheck();
+                    }, delaySeconds * 1000); // Converte segundos para milissegundos
+                }
 
-                    // Tenta selecionar a opção correta primeiro
+                /**
+                 * Verifica e clica nos botões de progresso ou opções de resposta.
+                 * @returns {boolean} True se um botão foi clicado, false caso contrário.
+                 */
+                function checkAndClickProgressButton() {
+                    debug("autoAnswer: Tentando selecionar opção de rádio correta...");
                     const radioInputs = document.querySelectorAll('input[type="radio"]');
                     let foundAndClickedRadio = false;
 
@@ -907,51 +914,36 @@
                         debug("autoAnswer: Nenhuma opção de rádio correta (para spoof) encontrada ou já selecionada.");
                     }
 
-                    // Agora tenta clicar nos botões de progresso
-                    let clickedAButton = false;
-                    // Definir botões na ordem de preferência para clique: Verificar, Próxima Questão, Continuar
-                    const buttonsToTry = [
-                        { selector: 'button[data-test-id="challenge-check-answer-button"]', text: 'Verificar', isTextMatch: false },
-                        { selector: 'button[data-test-id="next-question-button"]', text: 'Próxima Questão', isTextMatch: false },
-                        // Mais genéricos por conteúdo de texto
-                        { selector: 'button:not([disabled])', text: 'verificar', isTextMatch: true },
-                        { selector: 'button:not([disabled])', text: 'próxima pergunta', isTextMatch: true }, // Adicionado "próxima pergunta"
-                        { selector: 'button:not([disabled])', text: 'próxima questão', isTextMatch: true },
-                        { selector: 'button:not([disabled])', text: 'continuar', isTextMatch: true }
-                    ];
-
-                    for (const btnInfo of buttonsToTry) {
-                        const elements = document.querySelectorAll(btnInfo.selector);
-                        for (const element of elements) {
-                            let match = false;
-                            if (btnInfo.isTextMatch) {
-                                if (element.textContent.trim().toLowerCase() === btnInfo.text.toLowerCase()) {
-                                    match = true;
-                                }
-                            } else {
-                                match = true; // Para data-test-id, o seletor já garante a correspondência
-                            }
-
-                            // Garante que o botão é visível, não está desabilitado e que a correspondência é verdadeira
-                            if (match && element.offsetWidth > 0 && element.offsetHeight > 0 && !element.disabled) {
-                                element.focus(); // Boa prática para focar antes de clicar
-                                element.click();
-                                sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
-                                debug(`autoAnswer: Clicou em '${element.textContent.trim()}'.`);
-                                clickedAButton = true;
-                                break; // Sai do loop de botões após clicar em um
-                            } else if (match) {
-                                debug(`autoAnswer: Botão '${element.textContent.trim()}' encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
-                            }
-                        }
-                        if (clickedAButton) break; // Sai do loop externo se um botão já foi clicado
+                    let clicked = false;
+                    // Tenta clicar no botão "Verificar" com data-test-id primeiro
+                    const verifyButton = document.querySelector('button[data-test-id="challenge-check-answer-button"]');
+                    if (verifyButton && verifyButton.offsetWidth > 0 && verifyButton.offsetHeight > 0 && !verifyButton.disabled) {
+                        verifyButton.focus(); // Tenta focar o botão
+                        verifyButton.click();
+                        sendToast(`🚀 Resposta Automática: Clicado em 'Verificar' (data-test-id)!`, 1000);
+                        debug(`autoAnswer: Clicou em 'Verificar' (data-test-id).`);
+                        return true; // Retorna true se clicou
+                    } else if (verifyButton) {
+                        debug(`autoAnswer: Botão 'Verificar' (data-test-id) encontrado, mas não clicável (visível: ${verifyButton.offsetWidth > 0 && verifyButton.offsetHeight > 0}, disabled: ${verifyButton.disabled}).`);
                     }
 
-                    // Sempre aguarda o atraso configurado ANTES da próxima verificação, independentemente se um botão foi clicado.
-                    await delay(delaySeconds * 1000);
-
-                    // Em seguida, agenda a próxima verificação
-                    scheduleNextCheck();
+                    // Se o botão "Verificar" não foi clicado pelo data-test-id, tenta por texto
+                    const buttonsByText = document.querySelectorAll('button:not([disabled])');
+                    for (const element of buttonsByText) {
+                        const buttonText = element.textContent.trim().toLowerCase();
+                        if ((buttonText === 'verificar' || buttonText === 'próxima questão' || buttonText === 'continuar') &&
+                            element.offsetWidth > 0 && element.offsetHeight > 0) {
+                            element.focus(); // Tenta focar o botão
+                            element.click();
+                            sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}' (por texto)!`, 1000);
+                            debug(`autoAnswer: Clicou em '${element.textContent.trim()}' (por texto).`);
+                            clicked = true;
+                            return true; // Retorna true se clicou
+                        } else if (buttonText === 'verificar' || buttonText === 'próxima questão' || buttonText === 'continuar') {
+                            debug(`autoAnswer: Botão '${element.textContent.trim()}' (por texto) encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
+                        }
+                    }
+                    return false; // Retorna false se nenhum botão foi clicado
                 }
 
                 return {
@@ -1045,7 +1037,7 @@
                 }
             })();
 
-        }; // Fim do window.onload
+        })(); // Fim da IIFE principal
     </script>
 </body>
 </html>
