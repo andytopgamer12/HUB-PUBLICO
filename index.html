@@ -355,7 +355,7 @@
             box.style.position = 'fixed';
             box.style.width = COLLAPSED_WIDTH;
             box.style.height = COLLAPSED_HEIGHT;
-            box.style.background = 'rgb(0,0,0)'; // Fundo preto sólido para o box principal
+            box.style.background = 'rgba(0,0,0,0.85)';
             box.style.borderRadius = '15px';
             box.style.border = '2px solid #00FF00';
             box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
@@ -385,8 +385,7 @@
             var iconImage = document.createElement('img');
             // ATENÇÃO: Use o URL RAW público da sua imagem no GitHub aqui!
             // Exemplo: 'https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/ICONE.jpg'
-            // CORRIGIDO: URL da imagem
-            iconImage.src = 'https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICO/main/ICONE.jpg';
+            iconImage.src = 'https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICO/main/ICONE.jpg'; // <-- SUBSTITUA ESTE URL PELO SEU!
             iconImage.alt = 'Hub Icon';
             iconImage.style.width = '60px';
             iconImage.style.height = '60px';
@@ -428,11 +427,12 @@
             contentArea.style.flexDirection = 'column';
             contentArea.style.gap = '10px';
             contentArea.style.justifyContent = 'flex-start';
-            contentArea.style.background = 'rgb(0,0,0)'; // Fundo preto sólido
+            contentArea.style.background = 'rgba(0,0,0,0.8)';
             contentArea.style.overflowY = 'auto'; // Habilita a rolagem vertical
             contentArea.style.overflowX = 'hidden';
-            contentArea.style.minHeight = '0';
-            // contentArea.style.height = '100%'; // REMOVIDO: deixamos flex-grow gerenciar a altura
+            // NOVOS: Definindo min-height e height para garantir que ele ocupe o espaço e role quando necessário
+            contentArea.style.minHeight = '0'; /* Permite que ele encolha se necessário, mas flex-grow o fará expandir */
+            contentArea.style.height = '100%'; /* Garante que contentArea tenta preencher 100% do espaço do seu pai flexível */
 
 
             var mainMenuContainer = document.createElement('div');
@@ -455,7 +455,8 @@
             khanwareFeaturesContainer.style.paddingRight = '5px';
             /* Corrigido: sintaxe de box-sizing */
             khanwareFeaturesContainer.style.boxSizing = 'border-box';
-            khanwareFeaturesContainer.style.background = 'rgb(0,0,0)'; // Fundo preto sólido
+            // Garante que o fundo do container de features seja opaco
+            khanwareFeaturesContainer.style.background = 'rgba(0,0,0,0.8)';
 
 
             const featureDisplayNames = {
@@ -722,7 +723,7 @@
                 if (isExpanded) {
                     box.style.height = COLLAPSED_HEIGHT;
                     box.style.width = COLLAPSED_WIDTH;
-                    box.style.background = 'rgb(0,0,0)'; // Fundo preto sólido quando minimizado
+                    box.style.background = 'rgba(0,0,0,0.85)';
                     box.style.borderRadius = '15px';
                     box.style.border = '2px solid #00FF00';
                     box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
@@ -747,7 +748,7 @@
                 } else {
                     box.style.height = EXPANDED_HEIGHT;
                     box.style.width = EXPANDED_WIDTH;
-                    box.style.background = 'rgb(0,0,0)'; // AGORA PRETO SÓLIDO AO EXPANDIR!
+                    box.style.background = 'rgba(0,0,0,0.85)';
                     box.style.borderRadius = '15px';
                     box.style.border = '2px solid #00FF00';
                     box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
@@ -875,19 +876,16 @@
                 /**
                  * Agenda a próxima verificação e clique nos botões de progresso.
                  */
-                async function scheduleNextCheck() { // Agora é uma função async
+                function scheduleNextCheck() {
                     if (!isEnabled) {
                         return; // Para se a funcionalidade estiver desativada
                     }
-
-                    const clickedAButton = checkAndClickProgressButton();
-
-                    // Sempre aguarda o atraso configurado APÓS a tentativa de clique (seja bem-sucedida ou não)
-                    // Isso cria o "tempo entre elas" para anti-detecção.
-                    await delay(delaySeconds * 1000);
-
-                    // Em seguida, agenda a próxima verificação
-                    scheduleNextCheck();
+                    autoAnswerTimeout = setTimeout(() => {
+                        // Tenta clicar nos botões de progresso
+                        checkAndClickProgressButton();
+                        // Agenda a próxima verificação, independentemente do clique, para continuar a observação
+                        scheduleNextCheck();
+                    }, delaySeconds * 1000); // Converte segundos para milissegundos
                 }
 
                 /**
@@ -918,14 +916,13 @@
                         debug("autoAnswer: Nenhuma opção de rádio correta (para spoof) encontrada ou já selecionada.");
                     }
 
-                    // Definir botões na ordem de preferência para clique: Verificar, Próxima Questão, Continuar
+                    let clicked = false;
                     const buttonsToTry = [
-                        { selector: 'button[data-test-id="challenge-check-answer-button"]', text: 'Verificar', isTextMatch: false },
-                        { selector: 'button[data-test-id="next-question-button"]', text: 'Próxima Questão', isTextMatch: false },
-                        // Mais genéricos por conteúdo de texto
-                        { selector: 'button:not([disabled])', text: 'verificar', isTextMatch: true },
-                        { selector: 'button:not([disabled])', text: 'próxima questão', isTextMatch: true },
-                        { selector: 'button:not([disabled])', text: 'continuar', isTextMatch: true }
+                        { selector: 'button[data-test-id="challenge-check-answer-button"]', text: 'Verificar' },
+                        { selector: 'button[data-test-id="next-question-button"]', text: 'Próxima Questão' },
+                        { selector: 'button:not([disabled])', text: 'Próxima questão', isTextMatch: true },
+                        { selector: 'button[data-test-id="next-question-button"]._continue', text: 'Continuar' },
+                        { selector: 'button:not([disabled])', text: 'Continuar', isTextMatch: true }
                     ];
 
                     for (const btnInfo of buttonsToTry) {
@@ -937,22 +934,21 @@
                                     match = true;
                                 }
                             } else {
-                                match = true; // Para data-test-id, o seletor já garante a correspondência
+                                match = true;
                             }
 
-                            // Garante que o botão é visível, não está desabilitado e que a correspondência é verdadeira
                             if (match && element.offsetWidth > 0 && element.offsetHeight > 0 && !element.disabled) {
-                                element.focus(); // Boa prática para focar antes de clicar
                                 element.click();
                                 sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
                                 debug(`autoAnswer: Clicou em '${element.textContent.trim()}'.`);
-                                return true; // Indica que um botão foi clicado com sucesso
+                                clicked = true;
+                                return true; // Retorna true assim que um botão é clicado
                             } else if (match) {
                                 debug(`autoAnswer: Botão '${element.textContent.trim()}' encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
                             }
                         }
                     }
-                    return false; // Nenhum botão foi clicado
+                    return false; // Retorna false se nenhum botão foi clicado
                 }
 
                 return {
