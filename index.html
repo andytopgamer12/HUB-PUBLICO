@@ -355,27 +355,26 @@
             box.id = 'mr_andy_box';
 
             // Aplica estilos CSS à caixa principal para o visual de "hacker"
-            // *** ESTILOS AGRESSIVOS PARA FORÇAR VISIBILIDADE (COM all: unset) ***
+            // *** ESTILOS MAIS COMPATÍVEIS PARA FORÇAR VISIBILIDADE ***
             box.style.cssText = `
-                all: unset !important; /* Reseta todas as propriedades CSS */
-                position: fixed !important;
-                width: ${COLLAPSED_WIDTH} !important;
-                height: ${COLLAPSED_HEIGHT} !important;
-                background: rgb(0,0,0) !important;
-                border-radius: 15px !important;
-                border: 2px solid #00FF00 !important;
-                box-shadow: 0 0 20px rgba(0,255,0,0.6) !important;
-                z-index: 99999999 !important; /* Z-index EXTREMAMENTE alto */
-                cursor: move !important;
-                overflow: hidden !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                top: 20px !important; /* Posição inicial no canto superior */
-                right: 20px !important; /* Posição inicial no canto superior direito */
-                left: auto !important; /* Garante que 'left' não interfira */
-                margin: 0 !important;
-                padding: 0 !important;
+                position: fixed !important; /* Mantém position: fixed com alta prioridade */
+                width: ${COLLAPSED_WIDTH};
+                height: ${COLLAPSED_HEIGHT};
+                background: rgb(0,0,0);
+                border-radius: 15px;
+                border: 2px solid #00FF00;
+                box-shadow: 0 0 20px rgba(0,255,0,0.6);
+                z-index: 99999999 !important; /* Z-index EXTREMAMENTE alto ainda é crucial */
+                cursor: move;
+                overflow: hidden;
+                display: flex !important; /* Mantém display:flex com alta prioridade para garantir que apareça */
+                flex-direction: column;
+                align-items: center;
+                top: 20px !important; /* Posição inicial no canto superior com alta prioridade */
+                right: 20px !important; /* Posição inicial no canto superior direito com alta prioridade */
+                left: auto; /* Garante que 'left' não interfira, sem !important */
+                margin: 0;
+                padding: 0;
             `;
 
 
