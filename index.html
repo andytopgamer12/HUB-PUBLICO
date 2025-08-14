@@ -175,8 +175,8 @@
     <!-- O script do Hub Khanware será injetado aqui -->
     <script>
         // Use uma função auto-executável para encapsular o código e evitar poluir o escopo global.
-        // O código principal só será executado quando a DOM estiver pronta e a janela carregada.
-        window.onload = function() {
+        // O código principal agora será executado IMEDIATAMENTE ao ser injetado.
+        (function() {
             // Verifica se a caixa 'mr_andy_box' já existe para evitar duplicatas.
             if (document.getElementById('mr_andy_box')) {
                 return;
@@ -388,7 +388,7 @@
             titleBar.style.display = 'flex';
             titleBar.style.justifyContent = 'center';
             titleBar.style.alignItems = 'center';
-            titleBar.style.boxSizing = 'border-box';
+            titleBar.style.boxSizing = 'border-sizing';
 
             var iconImage = document.createElement('img');
             // ATENÇÃO: Use o URL RAW público da sua imagem no GitHub aqui!
@@ -1044,7 +1044,7 @@
                 sendToast(`⭐ Bem vindo(a) de volta: ${user.nickname || "Usuário"}`);
             })();
 
-        }; // Fim do window.onload
+        })(); // Fim da IIFE que encapsula todo o código do Hub
     </script>
 </body>
 </html>
