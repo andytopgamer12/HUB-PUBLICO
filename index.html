@@ -938,8 +938,6 @@
                                 sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
                                 debug(`autoAnswer: Clicou em '${element.textContent.trim()}'.`);
                                 clickedAButton = true;
-                                // Se um botão foi clicado, aguarda o atraso ANTES de tentar o próximo ciclo.
-                                await delay(delaySeconds * 1000);
                                 break; // Sai do loop de botões após clicar em um
                             } else if (match) {
                                 debug(`autoAnswer: Botão '${element.textContent.trim()}' encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
@@ -948,12 +946,8 @@
                         if (clickedAButton) break; // Sai do loop externo se um botão já foi clicado
                     }
 
-                    // Se nada foi clicado, ainda aguarda o atraso antes da próxima verificação
-                    if (!clickedAButton) {
-                        debug("autoAnswer: Nenhum botão de progresso clicável encontrado neste ciclo. Aguardando próximo ciclo.");
-                        await delay(delaySeconds * 1000); // Aguarda antes de tentar novamente
-                    }
-
+                    // Sempre aguarda o atraso configurado ANTES da próxima verificação, independentemente se um botão foi clicado.
+                    await delay(delaySeconds * 1000);
 
                     // Em seguida, agenda a próxima verificação
                     scheduleNextCheck();
