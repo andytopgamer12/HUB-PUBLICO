@@ -1,0 +1,63 @@
+(async function() {
+    // URL para o seu arquivo HTML completo do Hub hospedado NO GITHUB PAGES
+    // EXTREMAMENTE IMPORTANTE: SUBSTITUA ESTE LINK PELO URL REAL DO SEU GITHUB PAGES!
+    // Exemplo: 'https://SEU_USUARIO.github.io/SEU_REPOSITORIO/'
+    const hubHtmlUrl = 'https://andytopgamer12.github.io/HUB-PUBLICO/'; // <--- VERIFIQUE E SUBSTITUA ESTE URL PELO SEU URL DO GITHUB PAGES!
+
+    console.log('Iniciando injeção do Hub Khanware...');
+
+    try {
+        // 1. Busca o conteúdo HTML completo do seu hub no GitHub Pages
+        const response = await fetch(hubHtmlUrl);
+        if (!response.ok) {
+            // Se houver um erro de rede ou HTTP (como 404, 403), ele será capturado aqui.
+            // Para CSP/CORS, o navegador já bloqueia antes mesmo do fetch ser bem-sucedido.
+            // O ideal é que o GitHub Pages resolva o CORS na maioria dos casos.
+            throw new Error(`Falha ao carregar o código do hub. Status: ${response.status} - ${response.statusText}. Por favor, verifique se o URL do GitHub Pages está correto e se o site está publicado.`);
+        }
+        const fullHtml = await response.text();
+
+        // 2. Cria um parser temporário para extrair o conteúdo CSS e JavaScript
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(fullHtml, 'text/html');
+
+        // 3. Injeta os estilos CSS (procura pela primeira tag <style> no HTML buscado)
+        const styleTag = doc.querySelector('style');
+        if (styleTag) {
+            const injectedStyle = document.createElement('style');
+            injectedStyle.innerHTML = styleTag.innerHTML;
+            document.head.appendChild(injectedStyle);
+            console.log('✅ CSS do Hub injetado.');
+        } else {
+            console.warn('⚠️ Tag <style> não encontrada no código do hub. O hub pode não ser estilizado corretamente.');
+        }
+
+        // 4. Injeta o script principal (procura pela primeira tag <script> que contém 'mr_andy_box')
+        const scriptTags = doc.querySelectorAll('script');
+        let hubScriptContent = null;
+        for (const script of scriptTags) {
+            // Procura por uma string única que identifique o script principal do seu hub
+            // 'mr_andy_box' é uma boa identificação.
+            if (script.textContent.includes('mr_andy_box')) {
+                hubScriptContent = script.textContent;
+                break;
+            }
+        }
+
+        if (hubScriptContent) {
+            const injectedScript = document.createElement('script');
+            // O script IIFE já é autoinvocável. Apenas copiamos o texto.
+            injectedScript.textContent = hubScriptContent;
+            document.body.appendChild(injectedScript);
+            console.log('✅ Script do Hub injetado e executado.');
+        } else {
+            console.error('❌ Script principal do Hub não encontrado no HTML fornecido. Certifique-se de que ele está presente e identificável.');
+        }
+
+        console.log('Processo de injeção do Hub Khanware concluído. Verifique a página!');
+
+    } catch (error) {
+        console.error('❌ Erro fatal ao injetar o Hub:', error);
+        // O erro estará visível no console.
+    }
+})();
