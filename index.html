@@ -915,34 +915,32 @@
                     }
 
                     let clicked = false;
-                    const buttonsToTry = [
-                        { selector: 'button[data-test-id="challenge-check-answer-button"]', text: 'Verificar' },
-                        { selector: 'button[data-test-id="next-question-button"]', text: 'Próxima Questão' },
-                        { selector: 'button:not([disabled])', text: 'Próxima questão', isTextMatch: true },
-                        { selector: 'button[data-test-id="next-question-button"]._continue', text: 'Continuar' },
-                        { selector: 'button:not([disabled])', text: 'Continuar', isTextMatch: true }
-                    ];
+                    // Tenta clicar no botão "Verificar" com data-test-id primeiro
+                    const verifyButton = document.querySelector('button[data-test-id="challenge-check-answer-button"]');
+                    if (verifyButton && verifyButton.offsetWidth > 0 && verifyButton.offsetHeight > 0 && !verifyButton.disabled) {
+                        verifyButton.focus(); // Tenta focar o botão
+                        verifyButton.click();
+                        sendToast(`🚀 Resposta Automática: Clicado em 'Verificar' (data-test-id)!`, 1000);
+                        debug(`autoAnswer: Clicou em 'Verificar' (data-test-id).`);
+                        return true; // Retorna true se clicou
+                    } else if (verifyButton) {
+                        debug(`autoAnswer: Botão 'Verificar' (data-test-id) encontrado, mas não clicável (visível: ${verifyButton.offsetWidth > 0 && verifyButton.offsetHeight > 0}, disabled: ${verifyButton.disabled}).`);
+                    }
 
-                    for (const btnInfo of buttonsToTry) {
-                        const elements = document.querySelectorAll(btnInfo.selector);
-                        for (const element of elements) {
-                            let match = false;
-                            if (btnInfo.isTextMatch) {
-                                if (element.textContent.trim().toLowerCase() === btnInfo.text.toLowerCase()) {
-                                    match = true;
-                                }
-                            } else {
-                                match = true;
-                            }
-
-                            if (match && element.offsetWidth > 0 && element.offsetHeight > 0 && !element.disabled) {
-                                element.click();
-                                sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
-                                clicked = true;
-                                return true; // Retorna true assim que um botão é clicado
-                            } else if (match) {
-                                debug(`autoAnswer: Botão '${element.textContent.trim()}' encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
-                            }
+                    // Se o botão "Verificar" não foi clicado pelo data-test-id, tenta por texto
+                    const buttonsByText = document.querySelectorAll('button:not([disabled])');
+                    for (const element of buttonsByText) {
+                        const buttonText = element.textContent.trim().toLowerCase();
+                        if ((buttonText === 'verificar' || buttonText === 'próxima questão' || buttonText === 'continuar') &&
+                            element.offsetWidth > 0 && element.offsetHeight > 0) {
+                            element.focus(); // Tenta focar o botão
+                            element.click();
+                            sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}' (por texto)!`, 1000);
+                            debug(`autoAnswer: Clicou em '${element.textContent.trim()}' (por texto).`);
+                            clicked = true;
+                            return true; // Retorna true se clicou
+                        } else if (buttonText === 'verificar' || buttonText === 'próxima questão' || buttonText === 'continuar') {
+                            debug(`autoAnswer: Botão '${element.textContent.trim()}' (por texto) encontrado, mas não clicável (visível: ${element.offsetWidth > 0 && element.offsetHeight > 0}, disabled: ${element.disabled}).`);
                         }
                     }
                     return false; // Retorna false se nenhum botão foi clicado
