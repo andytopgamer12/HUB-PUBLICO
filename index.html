@@ -355,13 +355,13 @@
             box.style.position = 'fixed';
             box.style.width = COLLAPSED_WIDTH;
             box.style.height = COLLAPSED_HEIGHT;
-            box.style.background = 'rgba(0,0,0,0.85)';
+            box.style.background = 'rgb(0,0,0)'; // Fundo preto sólido para o box principal
             box.style.borderRadius = '15px';
             box.style.border = '2px solid #00FF00';
             box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
             box.style.zIndex = 99999; /* Z-index MUITO alto para garantir que ele fique na frente */
             box.style.cursor = 'move'; /* Cursor padrão para arrastar, sempre */
-            box.style.overflow = 'hidden';
+            box.style.overflow = 'hidden'; /* Mantém oculto para contentes que vazarem da caixa principal */
             box.style.display = 'flex';
             box.style.flexDirection = 'column';
             box.style.alignItems = 'center';
@@ -373,7 +373,6 @@
             var titleBar = document.createElement('div');
             titleBar.style.width = '100%';
             titleBar.style.padding = '5px';
-            titleBar.style.minHeight = COLLAPSED_HEIGHT;
             titleBar.style.background = 'transparent';
             titleBar.style.borderBottom = 'none';
             titleBar.style.flexShrink = '0';
@@ -423,35 +422,39 @@
             contentArea.style.color = 'white';
             contentArea.style.fontSize = '14px';
             contentArea.style.textAlign = 'center';
-            contentArea.style.flexGrow = '1';
+            contentArea.style.flexGrow = '1'; /* Permite que a área de conteúdo cresça */
             contentArea.style.display = 'none';
             contentArea.style.flexDirection = 'column';
             contentArea.style.gap = '10px';
             contentArea.style.justifyContent = 'flex-start';
-            // Garante que o fundo da área de conteúdo seja opaco para evitar vazamento
-            contentArea.style.background = 'rgba(0,0,0,0.8)';
-            contentArea.style.overflowY = 'auto'; // Manter auto para rolagem quando necessário
+            contentArea.style.background = 'rgb(0,0,0)'; // Fundo preto sólido
+            contentArea.style.overflowY = 'auto'; // Habilita a rolagem vertical
             contentArea.style.overflowX = 'hidden';
+            contentArea.style.minHeight = '0';
+            // contentArea.style.height = '100%'; // REMOVIDO: deixamos flex-grow gerenciar a altura
+
 
             var mainMenuContainer = document.createElement('div');
             mainMenuContainer.style.display = 'flex';
             mainMenuContainer.style.flexDirection = 'column';
             mainMenuContainer.style.gap = '10px';
             mainMenuContainer.style.width = '100%';
+            mainMenuContainer.style.flexGrow = '1'; /* GARANTE que ele preencha o espaço vertical */
+            mainMenuContainer.style.overflowY = 'auto'; /* Adicionado overflow para rolagem dentro do menu principal se necessário */
+
 
             var khanwareFeaturesContainer = document.createElement('div');
             khanwareFeaturesContainer.style.display = 'none';
             khanwareFeaturesContainer.style.flexDirection = 'column';
             khanwareFeaturesContainer.style.gap = '10px';
             khanwareFeaturesContainer.style.width = '100%';
-            khanwareFeaturesContainer.style.flexGrow = '1';
-            khanwareFeaturesContainer.style.overflowY = 'auto'; // Será definido como 'hidden' ao ocultar
+            khanwareFeaturesContainer.style.flexGrow = '1'; /* GARANTE que ele preencha o espaço vertical */
+            khanwareFeaturesContainer.style.overflowY = 'auto'; /* Será definido como 'hidden' ao ocultar */
             khanwareFeaturesContainer.style.overflowX = 'hidden';
             khanwareFeaturesContainer.style.paddingRight = '5px';
             /* Corrigido: sintaxe de box-sizing */
             khanwareFeaturesContainer.style.boxSizing = 'border-box';
-            // Garante que o fundo do container de features seja opaco
-            khanwareFeaturesContainer.style.background = 'rgba(0,0,0,0.8)';
+            khanwareFeaturesContainer.style.background = 'rgb(0,0,0)'; // Fundo preto sólido
 
 
             const featureDisplayNames = {
@@ -706,9 +709,8 @@
             document.body.appendChild(box);
 
             // Removendo o cálculo de 'initialLeft' e 'initialTop' para simplificar.
-            // O hub será posicionado estaticamente pelas propriedades 'right' e 'top' em 'box.style'.
-            // Não há mais necessidade de calcular posições baseadas na largura/altura da janela,
-            // pois queremos que ele sempre comece no mesmo ponto fixo em relação ao canto superior direito.
+            // O hub será posicionado apenas por box.style.right e box.style.top no CSS.
+            // A posição inicial agora é fixa (right: 20px; top: 20px;) definida no estilo do 'box'.
 
             let isExpanded = false;
             let dragStartX, dragStartY;
@@ -719,11 +721,11 @@
                 if (isExpanded) {
                     box.style.height = COLLAPSED_HEIGHT;
                     box.style.width = COLLAPSED_WIDTH;
-                    box.style.background = 'rgba(0,0,0,0.85)';
+                    box.style.background = 'rgb(0,0,0)'; // Fundo preto sólido quando minimizado
                     box.style.borderRadius = '15px';
                     box.style.border = '2px solid #00FF00';
                     box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
-                    box.style.zIndex = 99999; /* Z-index MUITO alto para garantir que ele fique na frente */
+                    box.style.zIndex = 99999; /* Z-index MUITO alto */
                     box.style.overflow = 'hidden';
                     box.style.display = 'flex';
                     box.style.flexDirection = 'column';
@@ -744,7 +746,7 @@
                 } else {
                     box.style.height = EXPANDED_HEIGHT;
                     box.style.width = EXPANDED_WIDTH;
-                    box.style.background = 'rgba(0,0,0,0.85)';
+                    box.style.background = 'rgb(0,0,0)'; // AGORA PRETO SÓLIDO AO EXPANDIR!
                     box.style.borderRadius = '15px';
                     box.style.border = '2px solid #00FF00';
                     box.style.boxShadow = '0 0 20px rgba(0,255,0,0.6)';
