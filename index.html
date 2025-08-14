@@ -385,7 +385,7 @@
             var iconImage = document.createElement('img');
             // ATENÇÃO: Use o URL RAW público da sua imagem no GitHub aqui!
             // Exemplo: 'https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/ICONE.jpg'
-            iconImage.src = 'https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICO/main/ICONE.jpg'; // <-- SUBSTITUA ESTE URL PELO SEU!
+            iconImage.src = 'https://raw.githubusercontent.com/andytopgamer12/HUB-PUBLICHO/main/ICONE.jpg'; // <-- SUBSTITUA ESTE URL PELO SEU!
             iconImage.alt = 'Hub Icon';
             iconImage.style.width = '60px';
             iconImage.style.height = '60px';
@@ -938,7 +938,6 @@
                             if (match && element.offsetWidth > 0 && element.offsetHeight > 0 && !element.disabled) {
                                 element.click();
                                 sendToast(`🚀 Resposta Automática: Clicado em '${element.textContent.trim()}'!`, 1000);
-                                debug(`autoAnswer: Clicou em '${element.textContent.trim()}'.`);
                                 clicked = true;
                                 return true; // Retorna true assim que um botão é clicado
                             } else if (match) {
