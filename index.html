@@ -898,8 +898,11 @@
                  */
                 async function scheduleNextCheck() { // Agora é uma função async
                     if (!isEnabled) {
+                        debug("[AutoAnswerModule] Auto-resposta desativada. Saindo de scheduleNextCheck.");
                         return; // Para se a funcionalidade estiver desativada
                     }
+
+                    debug(`[AutoAnswerModule] Executando scheduleNextCheck. Atraso configurado para esta iteração: ${delaySeconds}s.`);
 
                     // Tenta selecionar a opção correta primeiro
                     const radioInputs = document.querySelectorAll('input[type="radio"]');
@@ -964,8 +967,12 @@
                         if (clickedAButton) break; // Sai do loop externo se um botão já foi clicado
                     }
 
+                    console.time(`AutoAnswerDelay: ${delaySeconds}s`); // Inicia o temporizador para o atraso
+                    debug(`[AutoAnswerModule] Aguardando atraso de ${delaySeconds} segundos...`);
                     // Sempre aguarda o atraso configurado ANTES da próxima verificação, independentemente se um botão foi clicado.
                     await delay(delaySeconds * 1000);
+                    console.timeEnd(`AutoAnswerDelay: ${delaySeconds}s`); // Finaliza o temporizador
+                    debug(`[AutoAnswerModule] Atraso de ${delaySeconds} segundos concluído. Agendando próxima verificação.`);
 
                     // Em seguida, agenda a próxima verificação
                     scheduleNextCheck();
@@ -1032,7 +1039,7 @@
 
             // IIFE auto-executável para inicialização
             (async () => {
-                if (typeof DarkReader !== 'undefined') {  
+                if (typeof DarkReader !== 'undefined') {
                     // Ativa DarkReader somente se window.features.darkMode estiver true no início
                     if (window.features.darkMode) {
                         DarkReader.setFetchMethod(window.fetch);
