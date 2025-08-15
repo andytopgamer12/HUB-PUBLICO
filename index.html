@@ -214,7 +214,7 @@
                 rgbLogo: false
             };
             window.featureConfigs = {
-                autoAnswerDelay: 1.0, // O atraso inicial em segundos para a auto-resposta (COMEÇA NO MAIS RÁPIDO: 1.0s)
+                autoAnswerDelay: 1.5, // O atraso inicial em segundos para a auto-resposta (COMEÇA NO MAIS RÁPIDO: 1.5s)
                 customUsername: "",
                 customPfp: ""
             };
@@ -578,16 +578,16 @@
                 var delayInput = document.createElement('input');
                 delayInput.type = 'range';
                 delayInput.id = 'autoAnswerDelayInput';
-                // Define os limites do slider visualmente: 1.0s (mais rápido) na direita, 5.0s (mais lento) na esquerda.
-                delayInput.min = '1.0'; // Valor numérico mínimo do slider (visual: extremo esquerdo)
+                // Define os limites do slider visualmente: 1.5s (mais rápido) na direita, 5.0s (mais lento) na esquerda.
+                delayInput.min = '1.5'; // NOVO: Valor numérico mínimo do slider (visual: extremo esquerdo)
                 delayInput.max = '5.0';  // Valor numérico máximo do slider (visual: extremo direito)
                 delayInput.step = '0.1'; // Incremento de 0.1 segundos
 
                 // Mapeamento para exibir o atraso atual corretamente (inverso do slider)
                 const updateDisplayedDelay = (sliderValue) => {
                     // Formula para inverter a escala: (MAX_REAL_DELAY + MIN_REAL_DELAY - sliderValue)
-                    // Onde MIN_REAL_DELAY = 1.0 e MAX_REAL_DELAY = 5.0
-                    const MIN_REAL_DELAY = 1.0;
+                    // Onde MIN_REAL_DELAY = 1.5 e MAX_REAL_DELAY = 5.0
+                    const MIN_REAL_DELAY = 1.5; // NOVO: Mínimo real de atraso
                     const MAX_REAL_DELAY = 5.0;
                     let calculatedDelay = (MAX_REAL_DELAY + MIN_REAL_DELAY - sliderValue);
                     currentDelayValueSpan.innerText = calculatedDelay.toFixed(1) + 's';
@@ -595,9 +595,9 @@
                 };
 
                 // Define a posição inicial do slider baseada no atraso real configurado (invertido)
-                // Se autoAnswerDelay é 5.0 (lento), slider.value deve ser 1.0 (extremo esquerdo)
-                // Se autoAnswerDelay é 1.0 (rápido), slider.value deve ser 5.0 (extremo direito)
-                const initialSliderValue = (5.0 + 1.0 - window.featureConfigs.autoAnswerDelay);
+                // Se autoAnswerDelay é 5.0 (lento), slider.value deve ser 1.5 (extremo esquerdo)
+                // Se autoAnswerDelay é 1.5 (rápido), slider.value deve ser 5.0 (extremo direito)
+                const initialSliderValue = (5.0 + 1.5 - window.featureConfigs.autoAnswerDelay);
                 delayInput.value = initialSliderValue.toFixed(1);
                 updateDisplayedDelay(parseFloat(delayInput.value)); // Atualiza o texto inicial
 
