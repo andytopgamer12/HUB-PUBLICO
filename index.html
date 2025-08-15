@@ -580,14 +580,12 @@
                 var delayInput = document.createElement('input');
                 delayInput.type = 'range'; // Alterado para type="range"
                 delayInput.id = 'autoAnswerDelayInput';
-                delayInput.min = '0.8'; // Valor no slider correspondente ao atraso mais rápido (0.8s)
-                delayInput.max = '5.0';  // Valor no slider correspondente ao atraso mais lento (5.0s)
+                delayInput.min = '1.0'; // Valor mínimo do slider agora é 1.0 segundo
+                delayInput.max = '5.0';  // Valor máximo do slider permanece 5.0 segundos
                 delayInput.step = '0.1'; // Incremento de 0.1 segundos
 
-                // Define a posição inicial do slider. Se o atraso padrão é 5.0s (lento),
-                // o slider deve começar no mínimo (0.8 na escala do slider).
-                // A fórmula (5.8 - valor_desejado_de_atraso) inverte a relação.
-                delayInput.value = (5.8 - window.featureConfigs.autoAnswerDelay).toFixed(1);
+                // Define a posição inicial do slider diretamente com base no autoAnswerDelay
+                delayInput.value = window.featureConfigs.autoAnswerDelay.toFixed(1);
                 delayInput.style.width = '100%';
                 delayInput.style.marginTop = '5px';
 
@@ -600,8 +598,8 @@
                 delayInput.addEventListener('input', (event) => {
                     event.stopPropagation(); // Impede a propagação para a caixa principal
                     let sliderRawValue = parseFloat(event.target.value);
-                    // Calcula o atraso real: arrastar para a direita (valor do slider aumenta) diminui o atraso.
-                    let calculatedDelay = (5.8 - sliderRawValue);
+                    // O valor do slider agora mapeia diretamente para o atraso desejado
+                    let calculatedDelay = sliderRawValue;
                     currentDelayValueSpan.innerText = calculatedDelay.toFixed(1) + 's';
                     window.featureConfigs.autoAnswerDelay = calculatedDelay;
                     debug('Atraso da Auto-Resposta (arrastando):', window.featureConfigs.autoAnswerDelay, 'segundos');
@@ -613,7 +611,7 @@
                 delayInput.addEventListener('change', (event) => {
                     event.stopPropagation(); // Impede a propagação para a caixa principal
                     let sliderRawValue = parseFloat(event.target.value);
-                    let calculatedDelay = (5.8 - sliderRawValue);
+                    let calculatedDelay = sliderRawValue; // Direto
                     currentDelayValueSpan.innerText = calculatedDelay.toFixed(1) + 's';
                     window.featureConfigs.autoAnswerDelay = calculatedDelay;
                     sendToast(`Atraso: ${calculatedDelay.toFixed(1)}s`, 800, 'top');
