@@ -20,7 +20,7 @@
             margin: 0;
             padding: 0;
             /* As propriedades abaixo causavam os bugs visuais (bordas, centralização) quando injetadas
-               porque tentavam sobrescrever o layout do site inteiro.
+               porque tentavam sobrescrever o layout do layout do site inteiro.
                Foram removidas ou comentadas. */
             /* background-color: #222; */
             /* display: flex; */
@@ -214,7 +214,7 @@
                 rgbLogo: false
             };
             window.featureConfigs = {
-                autoAnswerDelay: 5.0, // O atraso inicial em segundos para a auto-resposta (começa no mais lento)
+                autoAnswerDelay: 1.0, // O atraso inicial em segundos para a auto-resposta (COMEÇA NO MAIS RÁPIDO: 1.0s)
                 customUsername: "",
                 customPfp: ""
             };
@@ -579,8 +579,6 @@
                 delayInput.type = 'range';
                 delayInput.id = 'autoAnswerDelayInput';
                 // Define os limites do slider visualmente: 1.0s (mais rápido) na direita, 5.0s (mais lento) na esquerda.
-                // Para que o menor tempo esteja na direita, definimos min como 1.0 e max como 5.0,
-                // e invertemos a leitura do valor no JavaScript.
                 delayInput.min = '1.0'; // Valor numérico mínimo do slider (visual: extremo esquerdo)
                 delayInput.max = '5.0';  // Valor numérico máximo do slider (visual: extremo direito)
                 delayInput.step = '0.1'; // Incremento de 0.1 segundos
@@ -902,7 +900,13 @@
                         return; // Para se a funcionalidade estiver desativada
                     }
 
-                    debug(`[AutoAnswerModule] Executando scheduleNextCheck. Atraso configurado para esta iteração: ${delaySeconds}s.`);
+                    debug(`[AutoAnswerModule] Agendando próxima verificação após atraso de ${delaySeconds} segundos...`);
+                    console.time(`AutoAnswerDelay: ${delaySeconds}s`); // Inicia o temporizador para o atraso
+                    // **Atraso FORÇADO antes de qualquer ação:**
+                    await delay(delaySeconds * 1000);
+                    console.timeEnd(`AutoAnswerDelay: ${delaySeconds}s`); // Finaliza o temporizador
+                    debug(`[AutoAnswerModule] Atraso de ${delaySeconds} segundos concluído. Executando ações...`);
+
 
                     // Tenta selecionar a opção correta primeiro
                     const radioInputs = document.querySelectorAll('input[type="radio"]');
@@ -967,14 +971,7 @@
                         if (clickedAButton) break; // Sai do loop externo se um botão já foi clicado
                     }
 
-                    console.time(`AutoAnswerDelay: ${delaySeconds}s`); // Inicia o temporizador para o atraso
-                    debug(`[AutoAnswerModule] Aguardando atraso de ${delaySeconds} segundos...`);
-                    // Sempre aguarda o atraso configurado ANTES da próxima verificação, independentemente se um botão foi clicado.
-                    await delay(delaySeconds * 1000);
-                    console.timeEnd(`AutoAnswerDelay: ${delaySeconds}s`); // Finaliza o temporizador
-                    debug(`[AutoAnswerModule] Atraso de ${delaySeconds} segundos concluído. Agendando próxima verificação.`);
-
-                    // Em seguida, agenda a próxima verificação
+                    // Em seguida, agenda a próxima verificação para o próximo ciclo
                     scheduleNextCheck();
                 }
 
@@ -1014,10 +1011,6 @@
                         debug("questionSpoof: Entrou no bloco de modificação de questão!");
                         let itemData = JSON.parse(responseObj.data.assessmentItem.item.itemData);
 
-                        // REMOVIDO: itemData.answerArea = { "calculator": false, "chi2Table": false, "periodicTable": false, "tTable": false, "zTable": false };
-                        // Esta linha foi removida pois pode causar GRAPHQL_ERROR ao modificar uma estrutura de dados
-                        // que a Khan Academy espera de forma específica.
-
                         itemData.question.content = phrases[Math.floor(Math.random() * phrases.length)] + `[[☃ radio 1]]`;
                         itemData.question.widgets = { "radio 1": { type: "radio",  options: { choices: [ { content: "Resposta correta.", correct: true }, { content: "Resposta incorreta.", correct: false } ] } } };
 
@@ -1025,10 +1018,6 @@
                         sendToast("🔓 Questão exploitada.", 1000);
                         return new Response(JSON.stringify(responseObj), { status: originalResponse.status, statusText: originalResponse.statusText, headers: originalResponse.headers });
                     }
-
-                    // A lógica de clique nos botões de progresso é gerenciada pelo autoAnswerModule.
-                    // Se window.features.autoAnswer estiver ativo, o módulo já estará verificando o DOM.
-                    // Não é necessário um setTimeout adicional aqui.
 
                 } catch (e) {
                     debug(`🚨 Erro em questionSpoof.js ou autoAnswer.js no fetch override:\n${e}`);
