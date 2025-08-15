@@ -573,19 +573,36 @@
 
                 var currentDelayValueSpan = document.createElement('span');
                 currentDelayValueSpan.id = 'currentDelayValue';
-                // Exibe o atraso atual com uma casa decimal e 's'.
-                currentDelayValueSpan.innerText = window.featureConfigs.autoAnswerDelay.toFixed(1) + 's';
                 delayContainer.appendChild(currentDelayValueSpan);
 
                 var delayInput = document.createElement('input');
-                delayInput.type = 'range'; // Alterado para type="range"
+                delayInput.type = 'range';
                 delayInput.id = 'autoAnswerDelayInput';
-                delayInput.min = '0.8'; // Valor mínimo de atraso (mais rápido)
-                delayInput.max = '5.0';  // Valor máximo de atraso (mais lento)
+                // Define os limites do slider visualmente: 1.0s (mais rápido) na direita, 5.0s (mais lento) na esquerda.
+                // Para que o menor tempo esteja na direita, definimos min como 1.0 e max como 5.0,
+                // e invertemos a leitura do valor no JavaScript.
+                delayInput.min = '1.0'; // Valor numérico mínimo do slider (visual: extremo esquerdo)
+                delayInput.max = '5.0';  // Valor numérico máximo do slider (visual: extremo direito)
                 delayInput.step = '0.1'; // Incremento de 0.1 segundos
 
-                // Define a posição inicial do slider diretamente com o valor do atraso
-                delayInput.value = window.featureConfigs.autoAnswerDelay.toFixed(1);
+                // Mapeamento para exibir o atraso atual corretamente (inverso do slider)
+                const updateDisplayedDelay = (sliderValue) => {
+                    // Formula para inverter a escala: (MAX_REAL_DELAY + MIN_REAL_DELAY - sliderValue)
+                    // Onde MIN_REAL_DELAY = 1.0 e MAX_REAL_DELAY = 5.0
+                    const MIN_REAL_DELAY = 1.0;
+                    const MAX_REAL_DELAY = 5.0;
+                    let calculatedDelay = (MAX_REAL_DELAY + MIN_REAL_DELAY - sliderValue);
+                    currentDelayValueSpan.innerText = calculatedDelay.toFixed(1) + 's';
+                    return calculatedDelay;
+                };
+
+                // Define a posição inicial do slider baseada no atraso real configurado (invertido)
+                // Se autoAnswerDelay é 5.0 (lento), slider.value deve ser 1.0 (extremo esquerdo)
+                // Se autoAnswerDelay é 1.0 (rápido), slider.value deve ser 5.0 (extremo direito)
+                const initialSliderValue = (5.0 + 1.0 - window.featureConfigs.autoAnswerDelay);
+                delayInput.value = initialSliderValue.toFixed(1);
+                updateDisplayedDelay(parseFloat(delayInput.value)); // Atualiza o texto inicial
+
                 delayInput.style.width = '100%';
                 delayInput.style.marginTop = '5px';
 
@@ -597,9 +614,9 @@
 
                 delayInput.addEventListener('input', (event) => {
                     event.stopPropagation(); // Impede a propagação para a caixa principal
-                    let newDelay = parseFloat(event.target.value);
-                    currentDelayValueSpan.innerText = newDelay.toFixed(1) + 's';
-                    window.featureConfigs.autoAnswerDelay = newDelay;
+                    let newSliderValue = parseFloat(event.target.value);
+                    let newCalculatedDelay = updateDisplayedDelay(newSliderValue); // Atualiza o texto e calcula o atraso real
+                    window.featureConfigs.autoAnswerDelay = newCalculatedDelay;
                     debug('Atraso da Auto-Resposta (arrastando):', window.featureConfigs.autoAnswerDelay, 'segundos');
                     if (window.features.autoAnswer && window.autoAnswerModule) {
                         window.autoAnswerModule.updateDelay(window.featureConfigs.autoAnswerDelay);
@@ -608,10 +625,10 @@
 
                 delayInput.addEventListener('change', (event) => {
                     event.stopPropagation(); // Impede a propagação para a caixa principal
-                    let newDelay = parseFloat(event.target.value);
-                    currentDelayValueSpan.innerText = newDelay.toFixed(1) + 's';
-                    window.featureConfigs.autoAnswerDelay = newDelay;
-                    sendToast(`Atraso: ${newDelay.toFixed(1)}s`, 800, 'top');
+                    let newSliderValue = parseFloat(event.target.value);
+                    let newCalculatedDelay = updateDisplayedDelay(newSliderValue); // Atualiza o texto e calcula o atraso real
+                    window.featureConfigs.autoAnswerDelay = newCalculatedDelay;
+                    sendToast(`Atraso: ${newCalculatedDelay.toFixed(1)}s`, 800, 'top');
                     debug('Atraso da Auto-Resposta (final):', window.featureConfigs.autoAnswerDelay, 'segundos');
                     if (window.features.autoAnswer && window.autoAnswerModule) {
                         window.autoAnswerModule.updateDelay(window.featureConfigs.autoAnswerDelay);
@@ -1015,7 +1032,7 @@
 
             // IIFE auto-executável para inicialização
             (async () => {
-                if (typeof DarkReader !== 'undefined') {
+                if (typeof DarkReader !== 'undefined') {  
                     // Ativa DarkReader somente se window.features.darkMode estiver true no início
                     if (window.features.darkMode) {
                         DarkReader.setFetchMethod(window.fetch);
